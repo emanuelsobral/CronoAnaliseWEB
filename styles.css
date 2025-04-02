@@ -1,0 +1,763 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+
+:root {
+    --itau-orange: #FF7900;
+    --itau-blue: #001952;
+    --itau-gray: #F5F5F5;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 20px;
+    background: var(--itau-gray);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.tabs-nav-container {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.tabs-nav {
+    display: flex;
+    justify-content: center;
+    gap: 150px;
+    position: relative;
+    z-index: 1;
+}
+
+.tab-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+}
+
+.tab-ball {
+    width: 35px;
+    height: 35px;
+    background: var(--itau-orange);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+}
+
+.tab-label {
+    color: black;
+    font-size: 14px;
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: absolute;
+    bottom: -30px;
+}
+
+.tabs-line {
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 4px;
+    width: 100%;
+    max-width: 400px;
+    background: var(--itau-orange);
+    z-index: 0;
+}
+
+.tab-btn.active .tab-ball {
+    transform: scale(1.8);
+    box-shadow: 0 4px 12px rgba(255, 121, 0, 0.3);
+}
+
+.tab-btn:hover .tab-ball {
+    transform: scale(1.2);
+}
+
+.tab-btn:hover .tab-label {
+    color: var(--itau-orange);
+}
+
+.tab-btn.active .tab-label {
+    color: var(--itau-orange);
+    font-weight: 700;
+}
+
+.tab-btn span {
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.tab-content {
+    display: none;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin: 50px 0;
+}
+
+.input-container {
+    position: relative;
+    height: 56px;
+}
+
+.input-container input {
+    width: 78%;
+    height: 100%;
+    padding: 20px 15px 10px 40px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+    color: var(--itau-blue);
+}
+
+.input-container label {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #757575;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.input-container i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--itau-orange);
+    font-size: 18px;
+}
+
+.input-container input:focus {
+    border-color: var(--itau-orange);
+    outline: none;
+    box-shadow: 0 4px 12px rgba(255, 121, 0, 0.1);
+}
+
+.input-container input:focus ~ label,
+.input-container input:valid ~ label {
+    top: 12px;
+    transform: none;
+    font-size: 12px;
+    color: var(--itau-orange);
+}
+
+.input-container input:focus ~ i {
+    color: var(--itau-blue);
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 300px;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.config-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.config-header h2 {
+    color: var(--itau-blue);
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+}
+
+.config-label {
+    display: block;
+    margin-bottom: 25px;
+}
+
+.label-text {
+    display: block;
+    color: var(--itau-blue);
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.config-input {
+    width: 94%;
+    padding: 14px 20px 14px 45px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    color: var(--itau-blue);
+}
+
+.config-input:focus {
+    border-color: var(--itau-orange);
+    box-shadow: 0 0 0 3px rgba(255, 121, 0, 0.1);
+    outline: none;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--itau-orange);
+    font-size: 18px;
+}
+
+.activities-container {
+    margin-top: 30px;
+    border-top: 2px solid #f0f0f0;
+    padding-top: 25px;
+}
+
+.activities-title {
+    color: var(--itau-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.badge {
+    background: var(--itau-orange);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 14px;
+}
+
+.activities-list {
+    display: grid;
+    padding: 0;
+    margin: 0;
+}
+
+.activities-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.activities-list li:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.activities-list button {
+    background: none;
+    color: #dc3545;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.activities-list button:hover {
+    background: rgba(220, 53, 69, 0.1);
+}
+
+.activities-list i {
+    font-size: 16px;
+}
+
+input:required {
+    border-left: 3px solid var(--itau-orange);
+    padding-left: 12px;
+}
+
+.required-label::after {
+    content: '*';
+    color: #dc3545;
+    margin-left: 3px;
+}
+
+
+@media (max-width: 768px) {
+    .config-card {
+        padding: 20px;
+    }
+    
+    .config-input {
+        font-size: 14px;
+        padding-left: 40px;
+    }
+    
+    .input-icon {
+        font-size: 16px;
+    }
+}
+
+button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 2px solid transparent;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Botão Primário (Ações Principais) */
+.btn-primary {
+    background: var(--itau-orange);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 121, 0, 0.2);
+}
+
+.btn-primary:hover {
+    background: #E56A00;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(255, 121, 0, 0.25);
+}
+
+.btn-primary:active {
+    background: #CC5F00;
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(255, 121, 0, 0.2);
+}
+
+/* Botão Secundário (Ações Complementares) */
+.btn-secondary {
+    background: var(--itau-blue);
+    color: white;
+    border: 2px solid var(--itau-blue);
+}
+
+.btn-secondary:hover {
+    background: #00123D;
+    border-color: #00123D;
+    transform: translateY(-1px);
+}
+
+.btn-secondary:active {
+    background: #000D2E;
+}
+
+/* Botão Outline (Ações Secundárias) */
+.btn-outline {
+    background: transparent;
+    color: var(--itau-blue);
+    border: 2px solid var(--itau-blue);
+}
+
+.btn-outline:hover {
+    background: rgba(0, 25, 82, 0.05);
+    transform: translateY(-1px);
+}
+
+/* Botão Danger (Ações Destrutivas) */
+.btn-danger {
+    background: #DC3545;
+    color: white;
+    border: 2px solid #DC3545;
+}
+
+.btn-danger:hover {
+    background: #BB2D3B;
+    border-color: #BB2D3B;
+    transform: translateY(-1px);
+}
+
+/* Botão com Ícone */
+.btn-icon {
+    padding: 10px;
+    min-width: 40px;
+    justify-content: center;
+}
+
+.btn-icon i {
+    font-size: 16px;
+    margin-right: 0;
+}
+
+/* Tamanhos */
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 13px;
+}
+
+.btn-lg {
+    padding: 16px 32px;
+    font-size: 16px;
+}
+
+/* Grupo de Botões */
+.btn-group {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.table-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table-container {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 20px 0;
+    overflow-x: auto;
+}
+
+#timeTable {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    min-width: 800px;
+}
+
+#timeTable thead {
+    background: var(--itau-blue);
+}
+
+#timeTable thead th {
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 14px;
+    padding: 18px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+}
+
+#timeTable tbody td {
+    padding: 16px;
+    color: var(--itau-blue);
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 14px;
+}
+
+#timeTable tbody tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+#timeTable tbody tr:hover {
+    background-color: rgba(255, 121, 0, 0.05);
+    cursor: pointer;
+}
+
+#timeTable td input[type="text"] {
+    width: 85%;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+#timeTable td input[type="text"]:focus {
+    border-color: var(--itau-orange);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 121, 0, 0.1);
+}
+
+/* Status de retrabalho */
+#timeTable td:nth-child(9) {
+    font-weight: 600;
+    color: var(--itau-orange);
+}
+
+/* Botões na tabela */
+.table-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.table-actions button {
+    background: rgba(255, 121, 0, 0.1);
+    color: var(--itau-orange);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    transition: all 0.3s ease;
+}
+
+.table-actions button:hover {
+    background: var(--itau-orange);
+    color: white;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.metric-card {
+    background: white;
+    padding: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+}
+
+.metric-card.primary {
+    background: var(--itau-blue);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    grid-column: span 2;
+}
+
+.metric-card.secondary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-left: 4px solid var(--itau-orange);
+}
+
+.metric-card.highlight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    background: linear-gradient(135deg, #ff7900 0%, #ff9d4d 100%);
+    color: white;
+}
+
+.metric-icon {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.metric-icon-small {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: var(--itau-orange);
+}
+
+.metric-title {
+    display: block;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+    opacity: 0.9;
+}
+
+.metric-value {
+    display: block;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.rework-list {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    grid-column: 1 / -1;
+}
+
+.rework-list h3 {
+    color: var(--itau-blue);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+#reworkActivities {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+#reworkActivities li {
+    background: var(--itau-gray);
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+
+#reworkActivities li span {
+    background: var(--itau-orange);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+/* Estilização das atividades */
+#activitiesList li, #selectedActivities li {
+    background: var(--itau-gray);
+    margin: 5px 0;
+    padding: 12px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.3s ease;
+    border: 1px solid #ddd;
+}
+
+/* Estilo dos itens da lista de atividades */
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+/* Radio buttons customizados */
+input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--itau-orange);
+}
+
+/* Botões de delete */
+#activitiesList button, #selectedActivities button {
+    background: var(--itau-orange);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+#activitiesList button:hover, #selectedActivities button:hover {
+    background: #cc6200;
+}
+
+/* Efeito hover nas atividades */
+#activitiesList li:hover, #selectedActivities li:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Layout responsivo para as listas */
+.activities-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Adicione ao styles.css */
+#selectedActivities li {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#selectedActivities li:hover {
+    background-color: rgba(255, 121, 0, 0.1);
+}
+
+#selectedActivities li:active {
+    transform: scale(0.98);
+}
+
+#selectedActivities input[type="radio"] {
+    margin-right: 10px;
+}
+
+.activity-item {
+    pointer-events: none; /* Impede que os elementos internos bloqueiem o clique */
+}
+
+.activity-item > * {
+    pointer-events: auto; /* Restaura a interação nos elementos filhos */
+}
+
+@media (max-width: 768px) {
+    .table-container {
+        border-radius: 8px;
+    }
+    
+    #timeTable thead th {
+        padding: 14px;
+        font-size: 13px;
+    }
+    
+    #timeTable tbody td {
+        padding: 12px;
+        font-size: 13px;
+    }
+}
