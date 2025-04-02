@@ -1,4 +1,4 @@
-# Plataforma de Cronoanálise - Itaú
+# Plataforma de Cronoanálise 
 
 ![Captura de Tela da Interface](screenshot.png) <!-- Adicione uma imagem real posteriormente -->
 
@@ -39,8 +39,8 @@ Uma solução completa para análise temporal de atividades, desenvolvida com a 
 
 ## ⚙️ Instalação
 
-git clone https://github.com/seu-usuario/cronoanalise-itau.git
-cd cronoanalise-itau
+git clone https://github.com/seu-usuario/cronoanalise.git
+cd cronoanalise
 
 🖥️ Uso
 
@@ -71,7 +71,7 @@ cd cronoanalise-itau
 
 📂 Estrutura de Arquivos
 
-cronoanalise-itau/
+cronoanalise/
 ├── index.html          # Interface principal
 ├── styles.css         # Estilos customizados
 ├── script.js          # Lógica de aplicação
