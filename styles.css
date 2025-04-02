@@ -112,6 +112,55 @@ body {
     margin-bottom: 20px;
 }
 
+.input-group .config-label {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-group .input-wrapper::after {
+    content: "✓";
+    color: var(--itau-orange);
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+}
+
+.input-group .filled .input-wrapper::after {
+    opacity: 1;
+}
+
+/* Estilo para os campos da input-row */
+.input-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-container::after {
+    content: "✓";
+    color: var(--itau-orange);
+    position: absolute;
+    right: 15px;
+    top: 55%; /* Ajuste para alinhar com o input */
+    transform: translateY(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    z-index: 2;
+}
+
+.input-container.filled::after {
+    opacity: 1;
+}
+
+/* Ajustes para não conflitar com ícones existentes */
+.input-container .fa {
+    left: 15px;
+    right: auto;
+}
+
 .input-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -235,6 +284,7 @@ ul {
     outline: none;
 }
 
+
 .input-icon {
     position: absolute;
     left: 15px;
@@ -305,6 +355,18 @@ ul {
     font-size: 16px;
 }
 
+#tab1 #activitiesList {
+    display: block;
+    padding: 0;
+}
+
+#tab2 .activities-container #selectedActivities {
+    display: grid;
+    gap: 12px;
+    padding: 0;
+    margin: 15px 0;
+}
+
 input:required {
     border-left: 3px solid var(--itau-orange);
     padding-left: 12px;
@@ -314,22 +376,6 @@ input:required {
     content: '*';
     color: #dc3545;
     margin-left: 3px;
-}
-
-
-@media (max-width: 768px) {
-    .config-card {
-        padding: 20px;
-    }
-    
-    .config-input {
-        font-size: 14px;
-        padding-left: 40px;
-    }
-    
-    .input-icon {
-        font-size: 16px;
-    }
 }
 
 button {
@@ -746,6 +792,12 @@ input[type="radio"] {
     pointer-events: auto; /* Restaura a interação nos elementos filhos */
 }
 
+@media (min-width: 768px) {
+    #tab2 .activities-container #selectedActivities {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
     .table-container {
         border-radius: 8px;
@@ -759,5 +811,22 @@ input[type="radio"] {
     #timeTable tbody td {
         padding: 12px;
         font-size: 13px;
+    }
+
+    .config-card {
+        padding: 20px;
+    }
+    
+    .config-input {
+        font-size: 14px;
+        padding-left: 40px;
+    }
+    
+    .input-icon {
+        font-size: 16px;
+    }
+
+    #tab2 .activities-container #selectedActivities {
+        grid-template-columns: 1fr;
     }
 }
