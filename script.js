@@ -2,6 +2,15 @@ let activities = JSON.parse(localStorage.getItem('activities')) || [];
 let tableData = JSON.parse(localStorage.getItem('tableData')) || [];
 let currentActivity = null; //Gambiarra
 let currentActivityIndex = -1; //Não é utilizado, mas tenho medo de tirar
+
+let appConfig = JSON.parse(localStorage.getItem('appConfig')) || {
+    analysisName: '',
+    analyst: '',
+    bank: '',
+    segment: '',
+    interviewee: ''
+};
+
 const requiredFields = ['analyst', 'bank', 'segment', 'interviewee'];
 
 const fieldTranslations = {
@@ -22,6 +31,79 @@ function saveTable() {
     loadTable();
     updateMetrics();
 }
+
+function saveAppConfig() {
+    localStorage.setItem('appConfig', JSON.stringify(appConfig));
+    
+    // Atualizar indicadores visuais
+    const fields = document.querySelectorAll('.config-field');
+    fields.forEach(field => {
+        const input = field.querySelector('input');
+        field.classList.toggle('filled', input.value.trim() !== '');
+    });
+}
+
+    // Atualize o event listener do DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Carregar configurações
+    document.getElementById('analysisName').value = appConfig.analysisName;
+    document.getElementById('analyst').value = appConfig.analyst;
+    document.getElementById('bank').value = appConfig.bank;
+    document.getElementById('segment').value = appConfig.segment;
+    document.getElementById('interviewee').value = appConfig.interviewee;
+
+    // Adicionar listeners para salvar automaticamente
+    const configFields = [
+        'analysisName', 'analyst', 'bank', 'segment', 'interviewee'
+    ];
+
+    configFields.forEach(field => {
+        document.getElementById(field).addEventListener('input', (e) => {
+            appConfig[field] = e.target.value;
+            saveAppConfig();
+        });
+    });
+});
+
+function updateFilledStatus() {
+    document.querySelectorAll('.input-group .config-input, .input-container input').forEach(input => {
+        const parent = input.closest('.input-group') ? input.closest('.config-label') : input.closest('.input-container');
+        if (input.value.trim() !== '') {
+            parent.classList.add('filled');
+        } else {
+            parent.classList.remove('filled');
+        }
+    });
+}
+
+// Adicione event listeners para todos os inputs
+document.querySelectorAll('input').forEach(input => {
+    input.addEventListener('input', updateFilledStatus);
+});
+
+// Execute na inicialização
+document.addEventListener('DOMContentLoaded', updateFilledStatus);
+
+function updateRequiredLabels() {
+    document.querySelectorAll('.input-container').forEach(container => {
+        const input = container.querySelector('input');
+        const label = container.querySelector('label');
+        
+        if (input.value.trim() !== '') {
+            label.classList.remove('required-label');
+        } else {
+            label.classList.add('required-label');
+        }
+    });
+}
+
+// Adicione event listeners
+document.querySelectorAll('.input-container input').forEach(input => {
+    input.addEventListener('input', updateRequiredLabels);
+});
+
+// Execute na inicialização
+document.addEventListener('DOMContentLoaded', updateRequiredLabels);
 
 function loadActivities() {
     const list = document.getElementById('activitiesList');
