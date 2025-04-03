@@ -317,7 +317,7 @@ function exportToExcel() {
             entry.endTime || 'Em andamento',
             entry.durationDisplay,
             entry.analyst,
-            entry.rework ? 'Sim' : 'Não',
+            entry.rework ? '1' : '0',
             entry.observation
         ])
     ]);
