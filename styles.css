@@ -144,7 +144,7 @@ body {
     color: var(--itau-orange);
     position: absolute;
     right: 15px;
-    top: 55%; /* Ajuste para alinhar com o input */
+    top: 55%;
     transform: translateY(-50%);
     opacity: 0;
     transition: opacity 0.3s;
@@ -155,7 +155,6 @@ body {
     opacity: 1;
 }
 
-/* Ajustes para não conflitar com ícones existentes */
 .input-container .fa {
     left: 15px;
     right: auto;
@@ -412,7 +411,7 @@ button {
     box-shadow: 0 2px 8px rgba(255, 121, 0, 0.2);
 }
 
-/* Botão Secundário (Ações Complementares) */
+/* Botão Secundário */
 .btn-secondary {
     background: var(--itau-blue);
     color: white;
@@ -429,6 +428,44 @@ button {
     background: #000D2E;
 }
 
+#startBtn {
+    position: relative;
+}
+
+#startBtn:disabled {
+    background: #e0e0e0 !important;
+    color: #929292 !important;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+#startBtn:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+#startBtn:disabled::after {
+    content: "Preenhcha os campos Analista, Banco/Setor, Segmento e Entrevistado para iniciar a análise";
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#startBtn:disabled:hover::after {
+    opacity: 100%;
+}
+
 .btn-export {
     position: relative;
 }
@@ -436,6 +473,7 @@ button {
 .btn-export:disabled {
     background: #e0e0e0 !important;
     color: #929292 !important;
+    border: none;
     cursor: not-allowed;
     opacity: 1;
 }
@@ -446,7 +484,7 @@ button {
 }
 
 .btn-export:disabled::after {
-    content: "Adicione dados à tabela para exportar";
+    content: "Preencha o Nome da Analise e Adicione Dados à Tabela para exportar";
     position: absolute;
     top: -35px;
     left: 50%;
@@ -466,7 +504,7 @@ button {
     opacity: 100%;
 }
 
-/* Botão Outline (Ações Secundárias) */
+/* Botão Outline */
 .btn-outline {
     background: transparent;
     color: var(--itau-blue);
@@ -478,7 +516,7 @@ button {
     transform: translateY(-1px);
 }
 
-/* Botão Danger (Ações Destrutivas) */
+/* Botão Danger */
 .btn-danger {
     background: #DC3545;
     color: white;
@@ -778,7 +816,7 @@ input[type="radio"] {
     background: var(--itau-orange);
     color: white;
     border: none;
-    padding: 5px 10px;
+    padding: 10px 14px;
     border-radius: 5px;
     cursor: pointer;
     transition: background 0.3s;
@@ -807,7 +845,6 @@ input[type="radio"] {
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-/* Adicione ao styles.css */
 #selectedActivities li {
     cursor: pointer;
     transition: background-color 0.2s;
