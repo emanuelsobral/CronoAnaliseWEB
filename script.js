@@ -264,7 +264,6 @@ function clearTable() {
     tableData = [];
     saveTable();
     updateExportButtonState();
-    updateExportButtonState();
 }
 
 function updateExportButtonState() {
@@ -274,6 +273,12 @@ function updateExportButtonState() {
 
 // Exportação para Excel
 function exportToExcel() {
+
+    const analysisName = document.getElementById('analysisName').value.trim();
+    if (!analysisName) {
+        showAnalysisNameError();
+        return;
+    }
     
     const wsData = XLSX.utils.aoa_to_sheet([
         ['Banco/Setor', 'Segmento', 'Entrevistado', 'Atividade', 'Data', 'Início', 'Fim', 'Tempo Total', 'Analista', 'Retrabalho', 'Observação'],
