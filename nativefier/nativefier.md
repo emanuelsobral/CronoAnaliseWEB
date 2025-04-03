@@ -4,11 +4,11 @@ Se quiser um arquivo .exe que abre o HTML sem precisar de um navegador, pode usa
 
 Instale o Nativefier
 
-npm install -g nativefier
+    npm install -g nativefier
 
 Execute o comando
 
-nativefier --name "CronoAnalise" --icon "camina/arquivo/icone.ico" "caminho/aruivo/index.html"
+    nativefier --name "CronoAnalise" --icon "camina/arquivo/icone.ico" "caminho/aruivo/index.html"
 
 Isso cria um aplicativo real para abrir o HTML.
 
