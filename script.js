@@ -325,7 +325,7 @@ function exportToExcel() {
             entry.endTime || 'Em andamento',
             entry.durationDisplay,
             entry.analyst,
-            entry.rework ? '0' : '1',
+            entry.rework ? '1' : '0',
             entry.observation
         ])
     ]);
