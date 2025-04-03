@@ -214,6 +214,7 @@ function startActivity() {
 
     tableData.push(newEntry);
     saveTable();
+    updateExportButtonState();
     currentActivityIndex = tableData.length - 1;
 }
 
@@ -249,21 +250,31 @@ function finishActivity() {
     lastEntry.rework = previousActivities.length > 0 ? 1 : 0;
     
     saveTable();
+    updateExportButtonState();
     currentActivityIndex = -1;
 }
 
 function deleteLastRow() {
     tableData.pop();
     saveTable();
+    updateExportButtonState();
 }
 
 function clearTable() {
     tableData = [];
     saveTable();
+    updateExportButtonState();
+    updateExportButtonState();
+}
+
+function updateExportButtonState() {
+    const exportBtn = document.getElementById('exportBtn');
+    exportBtn.disabled = tableData.length === 0;
 }
 
 // Exportação para Excel
 function exportToExcel() {
+    
     const wsData = XLSX.utils.aoa_to_sheet([
         ['Banco/Setor', 'Segmento', 'Entrevistado', 'Atividade', 'Data', 'Início', 'Fim', 'Tempo Total', 'Analista', 'Retrabalho', 'Observação'],
         ...tableData.map(entry => [
@@ -399,6 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadActivities();
     loadTable();
     updateMetrics();
+    updateExportButtonState();
     
     document.getElementById('newActivity').addEventListener('keypress', (e) => {
         if (e.key === 'Enter' && e.target.value.trim()) {
