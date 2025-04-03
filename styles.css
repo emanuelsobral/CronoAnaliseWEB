@@ -429,6 +429,43 @@ button {
     background: #000D2E;
 }
 
+.btn-export {
+    position: relative;
+}
+
+.btn-export:disabled {
+    background: #e0e0e0 !important;
+    color: #929292 !important;
+    cursor: not-allowed;
+    opacity: 1;
+}
+
+.btn-export:disabled:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+.btn-export:disabled::after {
+    content: "Adicione dados à tabela para exportar";
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #dc3545;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.btn-export:disabled:hover::after {
+    opacity: 100%;
+}
+
 /* Botão Outline (Ações Secundárias) */
 .btn-outline {
     background: transparent;
@@ -786,14 +823,6 @@ input[type="radio"] {
 
 #selectedActivities input[type="radio"] {
     margin-right: 10px;
-}
-
-.activity-item {
-    pointer-events: none; /* Impede que os elementos internos bloqueiem o clique */
-}
-
-.activity-item > * {
-    pointer-events: auto; /* Restaura a interação nos elementos filhos */
 }
 
 @media (min-width: 768px) {
