@@ -16,10 +16,10 @@ Isso cria um aplicativo real para abrir o HTML.
 
 Se quiser um executável simples:
 
-    Crie um arquivo .bat (exemplo: abrir_site.bat) e adicione:
+Crie um arquivo .bat (exemplo: abrir_site.bat) e adicione:
 
-@echo off
-start "" "caminho/do/seu/arquivo.html"
+    @echo off
+    start "" "caminho/do/seu/arquivo.html"
 
 Converta o .BAT em .EXE com ferramentas como:
 
