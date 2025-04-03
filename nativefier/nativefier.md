@@ -12,6 +12,8 @@ Execute o comando
 
 Isso cria um aplicativo real para abrir o HTML.
 
+    190.478% Maior que o arquivo html
+
 ⚙️ Opção 2: Criar um Arquivo .BAT com Ícone de Executável
 
 Se quiser um executável simples:
