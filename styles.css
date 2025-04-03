@@ -446,9 +446,11 @@ button {
 }
 
 #startBtn:disabled::after {
-    content: "Preenhcha os campos Analista, Banco/Setor, Segmento e Entrevistado para iniciar a análise";
+    content: "Preencha os campos Analista, Banco/Setor, Segmento e Entrevistado \A E Selecione uma Atividade para iniciar a análise";
+    white-space: pre-wrap;
     position: absolute;
-    top: -35px;
+    width: 530px;
+    top: -50px;
     left: 50%;
     transform: translateX(-50%);
     background: #dc3545;
@@ -456,7 +458,6 @@ button {
     padding: 5px 10px;
     border-radius: 4px;
     font-size: 12px;
-    white-space: nowrap;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s;
