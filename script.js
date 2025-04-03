@@ -12,6 +12,9 @@ let appConfig = JSON.parse(localStorage.getItem('appConfig')) || {
 };
 
 const requiredFields = ['analyst', 'bank', 'segment', 'interviewee'];
+requiredFields.forEach(field => {
+    document.getElementById(field).addEventListener('input', checkRequiredFields);
+});
 
 const fieldTranslations = {
     'analyst': 'Analista',
@@ -61,6 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById(field).addEventListener('input', (e) => {
             appConfig[field] = e.target.value;
             saveAppConfig();
+            updateExportButtonState()
+            checkRequiredFields();
         });
     });
 });
@@ -130,7 +135,7 @@ function loadActivities() {
 
     document.getElementById('activitiesCount').textContent = activities.length;
     document.getElementById('activitiesCount2').textContent = activities.length;
-
+    checkRequiredFields();
 }
 
 function handleActivityInput(e) {
@@ -215,6 +220,7 @@ function startActivity() {
     tableData.push(newEntry);
     saveTable();
     updateExportButtonState();
+    checkRequiredFields();
     currentActivityIndex = tableData.length - 1;
 }
 
@@ -252,6 +258,7 @@ function finishActivity() {
     saveTable();
     updateExportButtonState();
     currentActivityIndex = -1;
+    checkRequiredFields();
 }
 
 function deleteLastRow() {
@@ -268,8 +275,26 @@ function clearTable() {
 
 function updateExportButtonState() {
     const exportBtn = document.getElementById('exportBtn');
-    exportBtn.disabled = tableData.length === 0;
+    const analysisName = document.getElementById('analysisName').value.trim();
+    exportBtn.disabled = tableData.length === 0 || !analysisName;
 }
+
+function checkRequiredFields() {
+    const requiredFields = ['analyst', 'bank', 'segment', 'interviewee'];
+    const isValid = requiredFields.every(field => 
+        document.getElementById(field).value.trim() !== ''
+    );
+    
+    const activitySelected = document.querySelector('input[name="activity"]:checked') !== null;
+    
+    document.getElementById('startBtn').disabled = !isValid || !activitySelected;
+}
+
+document.addEventListener('click', (e) => {
+    if (e.target.name === 'activity') {
+        checkRequiredFields();
+    }
+});
 
 // Exportação para Excel
 function exportToExcel() {
