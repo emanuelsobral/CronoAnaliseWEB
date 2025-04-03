@@ -304,6 +304,14 @@ function exportToExcel() {
         showAnalysisNameError();
         return;
     }
+
+
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const exportBtn = document.getElementById('exportBtn');
+    
+    // Mostrar animação
+    loadingOverlay.style.display = 'flex';
+    exportBtn.disabled = true;
     
     const wsData = XLSX.utils.aoa_to_sheet([
         ['Banco/Setor', 'Segmento', 'Entrevistado', 'Atividade', 'Data', 'Início', 'Fim', 'Tempo Total', 'Analista', 'Retrabalho', 'Observação'],
@@ -317,7 +325,7 @@ function exportToExcel() {
             entry.endTime || 'Em andamento',
             entry.durationDisplay,
             entry.analyst,
-            entry.rework ? '1' : '0',
+            entry.rework ? '0' : '1',
             entry.observation
         ])
     ]);
@@ -358,7 +366,29 @@ function exportToExcel() {
     const fileName = `${analysiName}_${bank}_${segment}_${formattedDate}_${analyst}.xlsx`;
 
     XLSX.writeFile(wb, fileName);
+
+    try {
+        // Animação de sucesso
+        document.querySelector('.spinner-check').style.opacity = '1';
+        document.querySelector('.checkmark').style.animation = 'check-animation 0.6s ease-out forwards';
+    } catch (error) {
+        console.error('Erro na exportação:', error);
+        alert('Erro ao exportar arquivo!');
+    }
+
+    // Esconder animação após 1.2s
+    setTimeout(() => {
+        loadingOverlay.style.display = 'none';
+        exportBtn.disabled = false;
+        document.querySelector('.spinner-check').style.opacity = '0';
+        document.querySelector('.checkmark').style.animation = '';
+    }, 1200);
 }
+
+document.getElementById('exportBtn').addEventListener('click', () => {
+    document.querySelector('.spinner-circle').style.animation = 'spin 0.8s linear infinite';
+});
+
 
 function updateMetrics() {
     const metrics = calculateMetrics();
