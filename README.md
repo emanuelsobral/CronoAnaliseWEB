@@ -1,13 +1,18 @@
 # Plataforma de Cronoanálise 
 
-![Captura de Tela de configuração vazia](https://imgur.com/RuqrBlY)
-![Captura de Tela de configuração preenchida](https://imgur.com/uQdAhza)
-![Captura de Tela de analise vazia]([[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY))
-![Captura de Tela de analise preenchida erro iniciar]([[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a))
-![Captura de Tela de analise preenchida erro exportar]([[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL))
-![Captura de Tela de analise preenchida tabela]([[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL))
-![Captura de Tela de analise preenchida tabela]([[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL))
-![Captura de Tela de metricas preenchida]([[[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL)](https://imgur.com/yag26qc))<!-- Adicione uma imagem real posteriormente -->
+![Captura de Tela de configuração vazia](https://i.imgur.com/RuqrBlY.png)
+
+![Captura de Tela de configuração preenchida](https://i.imgur.com/RuqrBlY.png)
+
+![Captura de Tela de analise vazia](https://i.imgur.com/NoEleVY.png)
+
+![Captura de Tela de analise preenchida erro iniciar](https://i.imgur.com/S5g7R7a.png)
+
+![Captura de Tela de analise preenchida erro exportar](https://i.imgur.com/sCtOVQL.png)
+
+![Captura de Tela de analise preenchida tabela](https://i.imgur.com/Kt5kOpF.png)
+
+![Captura de Tela de metricas preenchida](https://i.imgur.com/yag26qc.png)
 
 Uma solução completa para análise temporal de atividades, desenvolvida com a identidade visual do Itaú, oferecendo controle preciso de processos e geração de relatórios.
 
