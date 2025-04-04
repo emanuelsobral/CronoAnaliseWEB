@@ -1,7 +1,7 @@
 # Plataforma de Cronoanálise 
 
-![Captura de Tela de configuração vazia]([screenshot.png](https://imgur.com/a/Gyeqzyd))
-![Captura de Tela de configuração preenchida]([[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza))
+![Captura de Tela de configuração vazia](https://imgur.com/RuqrBlY)
+![Captura de Tela de configuração preenchida](https://imgur.com/uQdAhza)
 ![Captura de Tela de analise vazia]([[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY))
 ![Captura de Tela de analise preenchida erro iniciar]([[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a))
 ![Captura de Tela de analise preenchida erro exportar]([[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL))
