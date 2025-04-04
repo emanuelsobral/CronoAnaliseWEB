@@ -101,20 +101,3 @@ Para implementações corporativas, recomenda-se:
     Implementação de backup em cloud
 
     Conexão com sistemas internos
-
-Equipe de Desenvolvimento
-[Seu Nome] - [Contato]
-[Colaboradores] - [Funções]
-
-
-Para uso completo:
-1. Crie um arquivo `LICENSE`
-2. Adicione capturas de tela reais
-3. Personalize com suas informações
-4. Atualize os badges conforme necessário
-
-Este README oferece:
-- Visão geral completa do sistema
-- Guia de instalação/uso simplificado
-- Documentação técnica detalhada
-- Compliance com boas práticas de desenvolvimento
