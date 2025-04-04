@@ -1,6 +1,13 @@
 # Plataforma de Cronoanálise 
 
-![Captura de Tela da Interface](screenshot.png) <!-- Adicione uma imagem real posteriormente -->
+![Captura de Tela de configuração vazia]([screenshot.png](https://imgur.com/a/Gyeqzyd))
+![Captura de Tela de configuração preenchida]([[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza))
+![Captura de Tela de analise vazia]([[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY))
+![Captura de Tela de analise preenchida erro iniciar]([[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a))
+![Captura de Tela de analise preenchida erro exportar]([[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL))
+![Captura de Tela de analise preenchida tabela]([[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL))
+![Captura de Tela de analise preenchida tabela]([[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL))
+![Captura de Tela de metricas preenchida]([[[[[[screenshot.png](https://imgur.com/a/Gyeqzyd)](https://imgur.com/uQdAhza)](https://imgur.com/NoEleVY)](https://imgur.com/S5g7R7a)](https://imgur.com/sCtOVQL)](https://imgur.com/yag26qc))<!-- Adicione uma imagem real posteriormente -->
 
 Uma solução completa para análise temporal de atividades, desenvolvida com a identidade visual do Itaú, oferecendo controle preciso de processos e geração de relatórios.
 
