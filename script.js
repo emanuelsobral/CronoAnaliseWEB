@@ -210,7 +210,7 @@ function startActivity() {
         endTime: null,
         endTimestamp: null,
         duration: 0,
-        durationDisplay: '-',
+        durationDisplay: '<span id="liveDuration">00:00:00</span>',
         analyst: document.getElementById('analyst').value,
         activity: activity.value,
         rework: 0,
@@ -222,6 +222,8 @@ function startActivity() {
     updateExportButtonState();
     checkRequiredFields();
     currentActivityIndex = tableData.length - 1;
+    loadTable();
+    startLiveTimer(newEntry.startTimestamp);
 }
 
 function finishActivity() {
@@ -259,6 +261,38 @@ function finishActivity() {
     updateExportButtonState();
     currentActivityIndex = -1;
     checkRequiredFields();
+    stopLiveTimer();
+}
+
+let liveTimerInterval = null;
+
+function startLiveTimer(startTimestamp) {
+    function update() {
+        const now = new Date().getTime();
+        const elapsed = now - startTimestamp;
+
+        const hours = Math.floor(elapsed / (1000 * 60 * 60));
+        const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+
+        const display = 
+            `${String(hours).padStart(2, '0')}:` +
+            `${String(minutes).padStart(2, '0')}:` +
+            `${String(seconds).padStart(2, '0')}`;
+
+        const span = document.getElementById('liveDuration');
+        if (span) {
+            span.textContent = display;
+        }
+    }
+
+    update(); // Mostra imediatamente
+    liveTimerInterval = setInterval(update, 1000);
+}
+
+function stopLiveTimer() {
+    clearInterval(liveTimerInterval);
+    liveTimerInterval = null;
 }
 
 function deleteLastRow() {
