@@ -1,7 +1,7 @@
 let activities = JSON.parse(localStorage.getItem('activities')) || [];
 let tableData = JSON.parse(localStorage.getItem('tableData')) || [];
 let currentActivity = null; //Gambiarra
-let currentActivityIndex = -1; //Não é utilizado, mas tenho medo de tirar
+let currentActivityIndex = tableData.findIndex(entry => !entry.endTime);
 
 let appConfig = JSON.parse(localStorage.getItem('appConfig')) || {
     analysisName: '',
