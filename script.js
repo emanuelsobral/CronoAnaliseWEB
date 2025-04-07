@@ -181,7 +181,7 @@ function startActivity() {
         return;
     }
 
-    // Nao serve pra nada mas se tirar quebra
+    // impede de iniciar uma nova atividade se já houver uma em andamento
     if (currentActivityIndex !== -1) {
         alert('Finalize a atividade atual antes de iniciar uma nova!');
         return;
