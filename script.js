@@ -23,6 +23,14 @@ const fieldTranslations = {
     'interviewee': 'Entrevistado'
 };
 
+if (currentActivityIndex !== -1) {
+    const activeEntry = tableData[currentActivityIndex];
+    // espera um pequeno tempo para garantir que a tabela foi renderizada
+    setTimeout(() => {
+        startLiveTimer(activeEntry.startTimestamp);
+    }, 50); // 50ms é o suficiente
+}
+
 // Funções básicas de persistência
 function saveActivities() {
     localStorage.setItem('activities', JSON.stringify(activities));
@@ -184,6 +192,8 @@ function startActivity() {
     // impede de iniciar uma nova atividade se já houver uma em andamento
     if (currentActivityIndex !== -1) {
         alert('Finalize a atividade atual antes de iniciar uma nova!');
+        const activeEntry = tableData[currentActivityIndex];
+        startLiveTimer(activeEntry.startTimestamp);
         return;
     }
 
@@ -536,7 +546,7 @@ function loadTable() {
             <td>${entry.date}</td>
             <td>${entry.startTime}</td>
             <td>${entry.endTime || 'Em andamento'}</td>
-            <td>${entry.durationDisplay}</td>
+            <td>${entry.durationDisplay || (entry.endTime ? formatDuration(entry.duration) : '<span id="liveDuration">00:00:00</span>')}</td>
             <td>${entry.analyst}</td>
             <td>${entry.rework ? 'Sim' : 'Não'}</td>
             <td><input type="text" value="${entry.observation}" onchange="updateObservation(${tableData.indexOf(entry)}, this.value)"></td>
