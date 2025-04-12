@@ -293,6 +293,10 @@ ul {
     font-size: 18px;
 }
 
+.controls .config-header{
+    
+}
+
 #tab1 .activities-container{
     display: none;
 }

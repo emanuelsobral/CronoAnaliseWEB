@@ -38,7 +38,8 @@
                     <label class="config-label">
                         <span class="label-text">Nome da Análise</span>
                         <div class="input-wrapper">
-                            <input type="text" id="analysisName" class="config-input">
+                            <input type="text" id="analysisName" class="config-input"                                    
+                            placeholder="Adicione o nome da Analise, Sera usado para exportar o arquivo">
                             <i class="fas fa-pencil-alt input-icon"></i>
                         </div>
                     </label>
@@ -54,12 +55,25 @@
                     <ul id="activitiesList" class="activities-list"></ul>
                 </div>
             </div>
+
+            <div class="controls">
+                <div class="config-header">
+                    <h2><i class="fas fa-eraser"></i> Deletar Tabela</h2>
+                </div>
+                <div class="btn-group">
+                    
+                    <button class="btn-outline" onclick="clearTable()">
+                        <i class="fas fa-eraser"></i>
+                        Limpar Tabela
+                    </button>
+                </div>  
+            </div>
         </div>
 
         <!-- Aba 2 - Análise -->
         <div id="tab2" class="tab-content">
             <div class="config-header">
-                <h2><i class="fas fa-chart-bar"></i></i>Análise</h2>
+                <h2><i class="fas fa-clipboard"></i></i>Dados Análise</h2>
             </div>
             <div class="input-row">
                 <div class="input-container">
@@ -86,7 +100,10 @@
                     <i class="fas fa-users"></i>
                 </div>
             </div>
-            
+
+            <div class="config-header">
+                <h2><i class="fas fa-list"></i></i>Atividades Da Análise</h2>
+            </div>
             <div class="activities-container">
 
                 <div class="input-group">
@@ -96,7 +113,7 @@
                             <input type="text" 
                                    id="newActivity" 
                                    class="config-input"
-                                   placeholder="Digite e pressione Enter">
+                                   placeholder="Digite e pressione Enter Para Adicionar Quantas Atividades Quiser">
                             <i class="fas fa-plus-circle input-icon"></i>
                         </div>
                     </label>
@@ -139,7 +156,7 @@
                 <div class="btn-group">
                     <button onclick="startActivity()" id="startBtn" class="btn-primary">
                         <i class="fas fa-play"></i>
-                        Iniciar
+                        Iniciar Contagem
                     </button>
 
                     <button class="btn-primary" onclick="finishActivity()">
@@ -157,10 +174,6 @@
                         Exportar
                     </button>
 
-                    <button class="btn-outline" onclick="clearTable()">
-                        <i class="fas fa-undo"></i>
-                        Limpar Tabela
-                    </button>
                 </div>  
             </div>
             <div id="loadingOverlay" class="loading-overlay">
