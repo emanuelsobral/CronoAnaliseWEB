@@ -293,6 +293,10 @@ ul {
     font-size: 18px;
 }
 
+#tab1 .activities-container{
+    display: none;
+}
+
 .activities-container {
     margin-top: 30px;
     border-top: 2px solid #f0f0f0;
