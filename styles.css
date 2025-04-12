@@ -812,6 +812,23 @@ th, td {
     font-size: 12px;
 }
 
+#reworkActivities li span.metric_interviewee{
+    color: var(--itau-orange);
+    display: contents;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+#reworkActivities li span.metric_number{
+    background-color: var(--itau-orange);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
 /* Estilização das atividades */
 #activitiesList li, #selectedActivities li {
     background: var(--itau-gray);
