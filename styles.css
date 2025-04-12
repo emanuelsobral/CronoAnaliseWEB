@@ -293,10 +293,6 @@ ul {
     font-size: 18px;
 }
 
-.controls .config-header{
-    
-}
-
 #tab1 .activities-container{
     display: none;
 }
@@ -567,6 +563,30 @@ button {
     gap: 12px;
     flex-wrap: wrap;
     justify-content: center;
+}
+
+.btn-group-moves-tab1 {
+    display: flex;
+    gap:12px;
+    flex-wrap: wrap;
+    justify-content: end;
+  
+}
+
+.btn-group-moves-tab2 {
+    display: flex;
+    gap:12px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  
+}
+
+.btn-group-moves-tab3 {
+    display: flex;
+    gap:12px;
+    flex-wrap: wrap;
+    justify-content: start;
+  
 }
 
 .table-container {
