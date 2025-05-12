@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <title>Cronoanalise</title>
@@ -7,7 +9,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <link rel="icon" type="image/x-icon" href="./icons/icon.png">
 </head>
+
 <body>
+
     <div class="container">
         <nav class="tabs-nav-container">
             <div class="tabs-line"></div>
@@ -28,134 +32,137 @@
         </nav>
 
         <!-- Aba 1 - Configurações -->
+
         <div id="tab1" class="tab-content active">
+
             <div class="config-header">
                 <h2><i class="fas fa-cog"></i> Configurações da Análise</h2>
             </div>
-            
+
             <div class="config-card">
+
                 <div class="input-group">
                     <label class="config-label">
                         <span class="label-text">Nome da Análise</span>
                         <div class="input-wrapper">
-                            <input type="text" id="analysisName" class="config-input"                                    
-                            placeholder="Adicione o nome da Analise, Sera usado para exportar o arquivo">
+                            <input type="text" id="analysisName" class="config-input"
+                                placeholder="Adicione o nome da Analise, Sera usado para exportar o arquivo">
                             <i class="fas fa-pencil-alt input-icon"></i>
                         </div>
                     </label>
                 </div>
-                
 
-                
+                <div class="config-header">
+                    <h2><i class="fas fa-clipboard"></i></i>Dados Análise</h2>
+                </div>
+
+                <div class="input-row">
+
+                    <div class="input-container">
+                        <input type="text" id="analyst" required class="required-field">
+                        <label for="analyst" class="required-label">Analista</label>
+                        <i class="fas fa-user"></i>
+                    </div>
+
+                    <div class="input-container">
+                        <input type="text" id="bank" required>
+                        <label for="bank" class="required-label">Banco/Setor</label>
+                        <i class="fas fa-university"></i>
+                    </div>
+
+                    <div class="input-container">
+                        <input type="text" id="segment" required>
+                        <label for="segment" class="required-label">Segmento</label>
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+
+                    <div class="input-container">
+                        <input type="text" id="interviewee" required>
+                        <label for="interviewee" class="required-label">Entrevistado</label>
+                        <i class="fas fa-users"></i>
+                    </div>
+
+                </div>
+
+                <div class="input-container">
+                    <select id="intervieweeRole" required>
+                        <option value="Gerente">Gerente</option>
+                        <option value="Analista">Analista</option>
+                        <option value="Coordenador">Engenheiro</option>
+                        <option value="Coordenador">Operação</option>
+                    </select>
+                    <label for="intervieweeRole" class="required-label">Cargo Entrevistado</label>
+                    <i class="fas fa-briefcase"></i>
+                </div>
+
                 <div class="activities-container">
                     <h3 class="activities-title">
                         <i class="fas fa-list-ol"></i> Atividades Cadastradas
                         <span class="badge" id="activitiesCount">0</span>
                     </h3>
-                    <ul id="activitiesList" class="activities-list"></ul>
+                    <div class="input-group">
+                        <label class="config-label">
+                            <span class="label-text">Adicionar Atividade</span>
+                            <div class="input-wrapper">
+                                <input type="text" id="newActivity" class="config-input"
+                                    placeholder="Digite e pressione Enter Para Adicionar Quantas Atividades Quiser">
+                                <i class="fas fa-plus-circle input-icon"></i>
+                            </div>
+                        </label>
+                        <ul id="activitiesList" class="activities-list"></ul>
+                    </div>
+
+                    <button onclick="clearActivities()" class="btn-outline-red">
+                        <i class="fas fa-undo"></i>
+                        Limpar Todas Atividades
+                    </button>
                 </div>
             </div>
 
-            <div class="controls">
-                <div class="config-header">
-                    <h2><i class="fas fa-eraser"></i> Deletar Tabela</h2>
-                </div>
-                <div class="btn-group">
-                    
-                    <button class="btn-danger" onclick="clearTable()">
-                        <i class="fas fa-eraser"></i>
-                        Limpar TODA Tabela
-                    </button>
-                </div>  
-            </div>
+
 
             <div class="controls">
                 <div class="config-header">
                 </div>
                 <div class="btn-group-moves-tab1">
-
                     <button class="btn-primary" onclick="showTab(1)">
                         <i class="fas fa-forward"></i>
                         Proximo
                     </button>
-                </div>  
+                </div>
             </div>
-             
         </div>
 
         <!-- Aba 2 - Análise -->
+
         <div id="tab2" class="tab-content">
-            <div class="config-header">
-                <h2><i class="fas fa-clipboard"></i></i>Dados Análise</h2>
-            </div>
-            <div class="input-row">
-                <div class="input-container">
-                    <input type="text" id="analyst" required class="required-field">
-                    <label for="analyst" class="required-label">Analista</label>
-                    <i class="fas fa-user"></i>
-                </div>
-                
-                <div class="input-container">
-                    <input type="text" id="bank" required>
-                    <label for="bank" class="required-label">Banco/Setor</label>
-                    <i class="fas fa-university"></i>
-                </div>
-                
-                <div class="input-container">
-                    <input type="text" id="segment" required>
-                    <label for="segment" class="required-label">Segmento</label>
-                    <i class="fas fa-chart-pie"></i>
-                </div>
-                
-                <div class="input-container">
-                    <input type="text" id="interviewee" required>
-                    <label for="interviewee" class="required-label">Entrevistado</label>
-                    <i class="fas fa-users"></i>
-                </div>
-            </div>
 
             <div class="config-header">
-                <h2><i class="fas fa-list"></i></i>Atividades Da Análise</h2>
+                <h2><i class="fas fa-clock"></i>CronoAnalise</h2>
             </div>
+
             <div class="activities-container">
-
-                <div class="input-group">
-                    <label class="config-label">
-                        <span class="label-text">Adicionar Atividade</span>
-                        <div class="input-wrapper">
-                            <input type="text" 
-                                   id="newActivity" 
-                                   class="config-input"
-                                   placeholder="Digite e pressione Enter Para Adicionar Quantas Atividades Quiser">
-                            <i class="fas fa-plus-circle input-icon"></i>
-                        </div>
-                    </label>
-                </div>
-                
                 <h3 class="activities-title">
-                    <i class="fas fa-list-ol"></i>Atividades Disponíveis 
+                    <i class="fas fa-list-ol"></i>Atividades Disponíveis
                     <span class="badge" id="activitiesCount2">0</span>
                 </h3>
                 <ul id="selectedActivities"></ul>
-                <button onclick="clearActivities()" class="btn-outline">
-                    <i class="fas fa-undo"></i>
-                    Limpar Todas Atividades
-                </button>
             </div>
 
             <div class="table-container">
                 <table id="timeTable">
                     <thead>
                         <tr>
-                            <th>Banco/Setor</th>
-                            <th>Segmento</th>
+                            <th class="bank-sec">Banco/Setor</th>
+                            <th class="hidden">Segmento</th>
                             <th>Entrevistado</th>
+                            <th class="hidden">Cargo Entrevistado</th>
                             <th>Atividade</th>
-                            <th>Data</th>
-                            <th>Início</th>
-                            <th>Fim</th>
+                            <th class="hidden">Data</th>
+                            <th class="hidden">Início</th>
+                            <th class="hidden">Fim</th>
                             <th>Tempo Total</th>
-                            <th>Analista</th>
+                            <th class="hidden">Analista</th>
                             <th>Retrabalho</th>
                             <th>Observação</th>
                         </tr>
@@ -165,62 +172,72 @@
             </div>
 
             <div class="controls">
-
                 <div class="btn-group">
                     <button onclick="startActivity()" id="startBtn" class="btn-primary">
                         <i class="fas fa-play"></i>
                         Iniciar Contagem
                     </button>
-
                     <button class="btn-primary" onclick="finishActivity()">
                         <i class="fas fa-stop"></i>
                         Finalizar
                     </button>
-
                     <button class="btn-danger btn-sm" onclick="deleteLastRow()">
                         <i class="fas fa-trash"></i>
                         Excluir Ultima
                     </button>
-
                     <button onclick="exportToExcel()" class="btn-secondary btn-export" id="exportBtn">
                         <i class="fas fa-file-export"></i>
                         Exportar
                     </button>
+                </div>
 
-                </div>  
+                <div class="controls">
+
+                    <div class="config-header">
+                        <h2><i class="fas fa-eraser"></i> Deletar Tabela</h2>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-danger" onclick="clearTable()">
+                            <i class="fas fa-eraser"></i>
+                            Limpar TODA Tabela
+                        </button>
+                    </div>
+                </div>
             </div>
+
             <div id="loadingOverlay" class="loading-overlay">
                 <div class="loading-spinner">
                     <div class="spinner-circle"></div>
                     <svg class="spinner-check" viewBox="0 0 50 50">
-                        <path class="checkmark" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                        <path class="checkmark" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                     </svg>
                 </div>
             </div>
 
             <div class="controls">
-                <div class="config-header">
-                </div>
-                <div class="btn-group-moves-tab2">
+                <div class="config-header"></div>
 
+                <div class="btn-group-moves-tab2">
                     <button class="btn-primary" onclick="showTab(0)">
                         <i class="fas fa-backward"></i>
                         Anterior
                     </button>
-
                     <button class="btn-primary" onclick="showTab(2)">
                         <i class="fas fa-forward"></i>
                         Proximo
                     </button>
-                </div>  
+                </div>
             </div>
         </div>
 
         <!-- Aba 3 - Métricas -->
+
         <div id="tab3" class="tab-content">
             <div class="config-header">
                 <h2><i class="fas fa-chart-line"></i>Métricas de Desempenho</h2>
             </div>
+
             <div class="metrics-grid">
                 <!-- Cartões principais -->
                 <div class="metric-card primary">
@@ -230,7 +247,7 @@
                         <span class="metric-value" id="totalActivities">0</span>
                     </div>
                 </div>
-        
+
                 <div class="metric-card primary">
                     <div class="metric-icon"><i class="fas fa-clock"></i></div>
                     <div class="metric-content">
@@ -238,21 +255,23 @@
                         <span class="metric-value" id="totalTime">00:00:00</span>
                     </div>
                 </div>
-        
+
                 <!-- Cartões secundários -->
+
                 <div class="metric-card secondary">
                     <i class="fas fa-hourglass-half metric-icon-small"></i>
                     <span class="metric-title">Tempo Médio por Atividade</span>
                     <span class="metric-value" id="averageTime">00:00:00</span>
                 </div>
-        
+
                 <div class="metric-card secondary">
                     <i class="fas fa-redo-alt metric-icon-small"></i>
                     <span class="metric-title">Retrabalhos</span>
                     <span class="metric-value" id="totalRework">0</span>
                 </div>
-        
+
                 <!-- Cartão de atividade mais longa -->
+
                 <div class="metric-card highlight">
                     <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
                     <div class="metric-content">
@@ -260,26 +279,29 @@
                         <span class="metric-value" id="longestActivity">-</span>
                     </div>
                 </div>
-        
+
                 <!-- Lista de retrabalhos -->
+
                 <div class="rework-list">
                     <h3><i class="fas fa-exclamation-circle"></i> Atividades com Retrabalho</h3>
                     <ul id="reworkActivities"></ul>
                 </div>
             </div>
+
             <div class="controls">
                 <div class="config-header">
                 </div>
                 <div class="btn-group-moves-tab3">
-
                     <button class="btn-primary" onclick="showTab(1)">
                         <i class="fas fa-backward"></i>
                         Antes
                     </button>
-                </div>  
+                </div>
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
+
 </body>
 </html>
