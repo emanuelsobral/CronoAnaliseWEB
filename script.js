@@ -214,6 +214,43 @@ function clearActivities() {
   saveActivities();
 }
 
+function clearAll() {
+
+  // Clear activities
+
+  activities = [];
+  saveActivities(); // Save the cleared activities to localStorage
+
+  // Clear appConfig
+
+  appConfig = {
+    analysisName: "",
+    analyst: "",
+    bank: "",
+    segment: "",
+    interviewee: "",
+    intervieweeRole: "", // Ensure the new field is reset
+  };
+
+  saveAppConfig(); // Save the cleared appConfig to localStorage
+
+  // Optionally, clear the input fields in the UI
+
+  document.getElementById("analysisName").value = "";
+  document.getElementById("analyst").value = "";
+  document.getElementById("bank").value = "";
+  document.getElementById("segment").value = "";
+  document.getElementById("interviewee").value = "";
+  document.getElementById("intervieweeRole").value = "";
+
+  // Update the UI to reflect the cleared state
+
+  loadActivities();
+  updateFilledStatus();
+  updateRequiredLabels();
+  updateExportButtonState();
+}
+
 // Funções da tabela
 
 function startActivity() {
