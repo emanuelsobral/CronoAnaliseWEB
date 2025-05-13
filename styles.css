@@ -1042,6 +1042,100 @@ input[type="radio"] {
   stroke-linecap: round;
 }
 
+  /* Estilo para o select */
+  .input-container select {
+    width: 100%;
+    height: 56px;
+    padding: 20px 15px 10px 40px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+    color: var(--itau-blue);
+    appearance: none; /* Remove a aparência padrão do dropdown */
+  }
+
+  /* Estilo para o select em foco */
+  .input-container select:focus {
+    border-color: var(--itau-orange);
+    outline: none;
+    box-shadow: 0 4px 12px rgba(255, 121, 0, 0.1);
+  }
+
+  /* Estilo para o label associado ao select */
+  .input-container select ~ label {
+    position: absolute;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #757575;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    font-size: 16px;
+  }
+
+  /* Estilo para o label quando o select está em foco ou preenchido */
+  .input-container select:focus ~ label,
+  .input-container select:valid ~ label {
+    top: 12px;
+    transform: none;
+    font-size: 12px;
+    color: var(--itau-orange);
+  }
+
+  /* Ícone ao lado do select */
+  .input-container i.fa-briefcase {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--itau-orange);
+    font-size: 18px;
+  }
+
+  /* Estilo para o container do campo de texto "Outros" */
+  #otherRoleContainer {
+    display: none; /* Oculto por padrão */
+    position: relative;
+    margin-bottom: 1.5rem;
+    height: auto;
+  }
+
+  /* Estilo para o campo de texto "Outros" */
+  #otherRoleContainer input {
+    width: calc(100% - 30px);
+    border: 2px solid #e0e0e0;
+    padding: 17px 15px 17px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: white;
+    color: var(--itau-blue);
+  }
+
+  /* Estilo para o campo de texto em foco */
+  #otherRoleContainer input:focus {
+    border-color: var(--itau-orange);
+    outline: none;
+    box-shadow: 0 4px 12px rgba(255, 121, 0, 0.1);
+  }
+
+  /* Placeholder do campo de texto */
+  #otherRoleContainer input::placeholder {
+    color: #757575;
+    font-size: 14px;
+  }
+
+  /* Estilo para o label associado ao campo de texto */
+  #otherRoleContainer input:focus ~ label,
+  #otherRoleContainer input:valid ~ label {
+    top: 12px;
+    transform: none;
+    font-size: 12px;
+    color: var(--itau-orange);
+  }
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

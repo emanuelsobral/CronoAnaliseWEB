@@ -130,13 +130,19 @@ function updateRequiredLabels() {
   document.querySelectorAll(".input-container").forEach((container) => {
     const input = container.querySelector("input");
     const label = container.querySelector("label");
-    if (input.value.trim() !== "") {
-      label.classList.remove("required-label");
-    } else {
-      label.classList.add("required-label");
+
+    // Verifica se o input e o label existem antes de acessar suas propriedades
+
+    if (input && label) {
+      if (input.value.trim() !== "") {
+        label.classList.remove("required-label");
+      } else {
+        label.classList.add("required-label");
+      }
     }
   });
 }
+
 
 // Adicione event listeners
 
@@ -250,6 +256,38 @@ function clearAll() {
   updateRequiredLabels();
   updateExportButtonState();
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const intervieweeRoleSelect = document.getElementById("intervieweeRole");
+  const otherRoleContainer = document.getElementById("otherRoleContainer");
+  const otherRoleInput = document.getElementById("otherRoleInput");
+
+  intervieweeRoleSelect.addEventListener("change", function () {
+    if (this.value === "Outros") {
+      otherRoleContainer.style.display = "block";
+      otherRoleInput.required = true;
+      intervieweeRoleSelect.removeAttribute("id");
+      otherRoleInput.setAttribute("id", "intervieweeRole");
+      otherRoleInput.addEventListener("input", (e) => {
+        appConfig.intervieweeRole = e.target.value;
+        saveAppConfig();
+        updateExportButtonState(); // Atualiza o estado do botão de exportação
+      });
+    } else {
+      otherRoleContainer.style.display = "none";
+      otherRoleInput.required = false;
+      otherRoleInput.value = ""; // Limpa o campo de texto
+      otherRoleInput.removeAttribute("id");
+      intervieweeRoleSelect.setAttribute("id", "intervieweeRole");
+
+      appConfig.intervieweeRole = this.value;
+
+      saveAppConfig();
+      updateExportButtonState(); // Atualiza o estado do botão de exportação
+    }
+  });
+});
+
 
 // Funções da tabela
 
