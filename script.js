@@ -429,12 +429,14 @@ function stopLiveTimer() {
 }
 
 function deleteLastRow() {
+  finishActivity(); // Finaliza a atividade atual antes de deletar
   tableData.pop();
   saveTable();
   updateExportButtonState();
 }
 
 function clearTable() {
+  finishActivity(); // Finaliza a atividade atual antes de limpar a tabela
   tableData = [];
   saveTable();
   updateExportButtonState();
@@ -466,6 +468,7 @@ document.addEventListener("click", (e) => {
 // Exportação para Excel
 
 function exportToExcel() {
+  finishActivity(); // Garante que a última atividade seja finalizada antes da exportação
   const analysisName = document.getElementById("analysisName").value.trim();
 
   if (!analysisName) {
