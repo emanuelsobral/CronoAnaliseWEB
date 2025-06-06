@@ -9,7 +9,8 @@ let appConfig = JSON.parse(localStorage.getItem("appConfig")) || {
   bank: "",
   segment: "",
   interviewee: "",
-  intervieweeRole: "", // Novo campo
+  intervieweeRole: "",
+  layoutSideBySide: false,
 };
 
 const requiredFields = [
@@ -18,7 +19,7 @@ const requiredFields = [
   "segment",
   "interviewee",
   "intervieweeRole",
-]; // Adicione o novo campo aqui
+];
 
 requiredFields.forEach((field) => {
   document.getElementById(field).addEventListener("input", checkRequiredFields);
@@ -34,10 +35,9 @@ const fieldTranslations = {
 if (currentActivityIndex !== -1) {
   const activeEntry = tableData[currentActivityIndex];
 
-  // espera um pequeno tempo para garantir que a tabela foi renderizada
   setTimeout(() => {
     startLiveTimer(activeEntry.startTimestamp);
-  }, 50); // 50ms é o suficiente
+  }, 50);
 }
 
 // Funções básicas de persistência
@@ -55,7 +55,6 @@ function saveTable() {
 function saveAppConfig() {
   localStorage.setItem("appConfig", JSON.stringify(appConfig));
 
-  // Atualizar indicadores visuais
   const fields = document.querySelectorAll(".config-field");
   fields.forEach((field) => {
     const input = field.querySelector("input");
@@ -72,7 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("interviewee").value = appConfig.interviewee;
   document.getElementById("intervieweeRole").value = appConfig.intervieweeRole;
 
-  // Adicionar listeners para salvar automaticamente
   const configFields = [
     "analysisName",
     "analyst",
@@ -91,60 +89,86 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // --- LÓGICA DO SWITCH DE LAYOUT ---
-  const layoutSwitch = document.getElementById('layoutSwitch');
-  const analysisContentWrapper = document.getElementById('analysisContentWrapper');
+  // --- LÓGICA DO SWITCH DE LAYOUT (COM PERSISTÊNCIA) ---
+  const layoutSwitch = document.getElementById("layoutSwitch");
+  const analysisContentWrapper = document.getElementById(
+    "analysisContentWrapper"
+  );
 
-  layoutSwitch.addEventListener('change', () => {
-    analysisContentWrapper.classList.toggle('side-by-side', layoutSwitch.checked);
+  layoutSwitch.checked = appConfig.layoutSideBySide || false;
+  analysisContentWrapper.classList.toggle("side-by-side", layoutSwitch.checked);
+
+  layoutSwitch.addEventListener("change", () => {
+    analysisContentWrapper.classList.toggle("side-by-side", layoutSwitch.checked);
+    appConfig.layoutSideBySide = layoutSwitch.checked;
+    saveAppConfig();
   });
 
-  // --- LÓGICA DE DRAG AND DROP OTIMIZADA (PARA AMBAS AS LISTAS) ---
-  
+  // --- LÓGICA DE DRAG AND DROP OTIMIZADA (COM DETECÇÃO DIRETA) ---
   function addDragAndDropListeners(container) {
-    container.addEventListener('dragstart', (e) => {
-      if (e.target.matches('li')) {
-          e.target.classList.add('dragging');
+    container.addEventListener("dragstart", (e) => {
+      if (e.target.matches("li")) {
+        e.target.classList.add("dragging");
       }
     });
 
-    container.addEventListener('dragend', (e) => {
-      if (e.target.matches('li')) {
-          e.target.classList.remove('dragging');
-          
-          const liElements = [...container.querySelectorAll('li')];
-          const nameOrder = liElements.map(li => {
-              const textElement = li.querySelector('label') || li.querySelector('span');
-              return textElement.textContent.trim().replace(/^\d+\.\s*/, '');
-          });
+    container.addEventListener("dragend", (e) => {
+      if (e.target.matches("li")) {
+        e.target.classList.remove("dragging");
 
-          activities.sort((a, b) => nameOrder.indexOf(a.name) - nameOrder.indexOf(b.name));
-          saveActivities();
+        const liElements = [...container.querySelectorAll("li")];
+        const nameOrder = liElements.map((li) => {
+          const textElement =
+            li.querySelector("label") || li.querySelector("span");
+          return textElement.textContent.trim().replace(/^\d+\.\s*/, "");
+        });
+
+        activities.sort(
+          (a, b) => nameOrder.indexOf(a.name) - nameOrder.indexOf(b.name)
+        );
+        saveActivities();
       }
     });
 
-    container.addEventListener('dragover', (e) => {
+    container.addEventListener("dragover", (e) => {
       e.preventDefault();
-      const draggingItem = document.querySelector('.dragging');
+
+      const draggingItem = document.querySelector(".dragging");
       if (!draggingItem) return;
+        
+      // OTIMIZAÇÃO: Lógica de Auto-Scroll
+      const scrollableParent = container.parentElement;
+      const parentStyle = window.getComputedStyle(scrollableParent);
+      if (parentStyle.overflowY === "auto" || parentStyle.overflowY === "scroll") {
+        const scrollBounds = scrollableParent.getBoundingClientRect();
+        const scrollThreshold = 50;
+        const scrollSpeed = 10;
 
-      const overElement = e.target.closest('li');
-      if (overElement == null) return;
+        if (e.clientY < scrollBounds.top + scrollThreshold) {
+          scrollableParent.scrollTop -= scrollSpeed;
+        } else if (e.clientY > scrollBounds.bottom - scrollThreshold) {
+          scrollableParent.scrollTop += scrollSpeed;
+        }
+      }
 
-      const box = overElement.getBoundingClientRect();
-      const offset = e.clientY - box.top - box.height / 2;
+      // OTIMIZAÇÃO: Lógica de reorganização baseada no elemento sob o cursor
+      const overElement = document.elementFromPoint(e.clientX, e.clientY)?.closest('li:not(.dragging)');
 
-      if (offset < 0) {
-        overElement.parentNode.insertBefore(draggingItem, overElement);
-      } else {
-        overElement.parentNode.insertBefore(draggingItem, overElement.nextSibling);
+      if (overElement) {
+        const box = overElement.getBoundingClientRect();
+        const offset = e.clientY - box.top - box.height / 2;
+
+        if (offset < 0) {
+          container.insertBefore(draggingItem, overElement);
+        } else {
+          container.insertBefore(draggingItem, overElement.nextSibling);
+        }
       }
     });
   }
-  
-  // Aplica a lógica para as duas listas
-  addDragAndDropListeners(document.getElementById('selectedActivities')); // Aba Análise
-  addDragAndDropListeners(document.getElementById('activitiesList'));   // Aba Configurações
+
+  addDragAndDropListeners(document.getElementById("selectedActivities"));
+  addDragAndDropListeners(document.getElementById("activitiesList"));
 
   // --- CARREGAMENTO INICIAL E OUTROS LISTENERS ---
   const intervieweeRoleSelect = document.getElementById("intervieweeRole");
@@ -173,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updateExportButtonState();
     }
   });
-  
+
   document.querySelectorAll("input").forEach((input) => {
     input.addEventListener("input", updateFilledStatus);
   });
@@ -181,9 +205,10 @@ document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll(".input-container input").forEach((input) => {
     input.addEventListener("input", updateRequiredLabels);
   });
-  
+
   document.getElementById("exportBtn").addEventListener("click", () => {
-    document.querySelector(".spinner-circle").style.animation = "spin 0.8s linear infinite";
+    document.querySelector(".spinner-circle").style.animation =
+      "spin 0.8s linear infinite";
   });
 
   document.addEventListener("click", (e) => {
@@ -191,12 +216,16 @@ document.addEventListener("DOMContentLoaded", () => {
       checkRequiredFields();
     }
   });
-  
+
   document.getElementById("newActivity").addEventListener("keypress", (e) => {
     if (e.key === "Enter" && e.target.value.trim()) {
       const newActivity = e.target.value.trim().toLowerCase();
 
-      if (activities.some((activity) => activity.name.toLowerCase() === newActivity)) {
+      if (
+        activities.some(
+          (activity) => activity.name.toLowerCase() === newActivity
+        )
+      ) {
         alert("Atividade já existe!");
         e.target.value = "";
         return;
@@ -216,10 +245,11 @@ document.addEventListener("DOMContentLoaded", () => {
   updateRequiredLabels();
 });
 
-
 function updateFilledStatus() {
   document
-    .querySelectorAll(".input-group .config-input, .input-container input, .input-container select")
+    .querySelectorAll(
+      ".input-group .config-input, .input-container input, .input-container select"
+    )
     .forEach((input) => {
       const parent = input.closest(".input-group")
         ? input.closest(".config-label")
@@ -267,8 +297,12 @@ function loadActivities() {
     .map(
       (activity, index) => `
         <li draggable="true">
-            <input type="radio" name="activity" id="activity${index}" value="${activity.name}">
-            <label for="activity${index}"><strong>${index + 1}.</strong> ${activity.name}</label>
+            <input type="radio" name="activity" id="activity${index}" value="${
+        activity.name
+      }">
+            <label for="activity${index}"><strong>${
+        index + 1
+      }.</strong> ${activity.name}</label>
             <button onclick="event.stopPropagation(); deleteActivity(${index})"><i class="fas fa-trash-alt"></i></button>
         </li>
     `
@@ -298,7 +332,11 @@ function handleActivityInput(e) {
 }
 
 function deleteActivity(index) {
-  if (confirm(`Tem certeza que deseja excluir a atividade "${activities[index].name}"?`)) {
+  if (
+    confirm(
+      `Tem certeza que deseja excluir a atividade "${activities[index].name}"?`
+    )
+  ) {
     activities.splice(index, 1);
     saveActivities();
   }
@@ -312,13 +350,23 @@ function clearActivities() {
 }
 
 function clearAll() {
-  if (confirm("ATENÇÃO: Isso limpará TODOS os dados da aplicação, incluindo configurações, atividades e a tabela de análise. Deseja continuar?")) {
+  if (
+    confirm(
+      "ATENÇÃO: Isso limpará TODOS os dados da aplicação, incluindo configurações, atividades e a tabela de análise. Deseja continuar?"
+    )
+  ) {
     activities = [];
     appConfig = {
-      analysisName: "", analyst: "", bank: "", segment: "", interviewee: "", intervieweeRole: "",
+      analysisName: "",
+      analyst: "",
+      bank: "",
+      segment: "",
+      interviewee: "",
+      intervieweeRole: "",
+      layoutSideBySide: false,
     };
     tableData = [];
-    
+
     saveActivities();
     saveAppConfig();
     saveTable();
@@ -328,23 +376,26 @@ function clearAll() {
     document.getElementById("bank").value = "";
     document.getElementById("segment").value = "";
     document.getElementById("interviewee").value = "";
-    document.getElementById("intervieweeRole").value = "Gerente"; // Reseta para o padrão
-    document.getElementById('otherRoleContainer').style.display = 'none';
+    document.getElementById("intervieweeRole").value = "Gerente";
+    document.getElementById("otherRoleContainer").style.display = "none";
+
+    const layoutSwitch = document.getElementById("layoutSwitch");
+    layoutSwitch.checked = false;
+    document
+      .getElementById("analysisContentWrapper")
+      .classList.remove("side-by-side");
 
     updateFilledStatus();
     updateRequiredLabels();
   }
 }
 
-
 // Funções da tabela
 function startActivity() {
-  const missingFields = requiredFields.filter(
-    (field) => {
-       const el = document.getElementById(field);
-       return !el || !el.value.trim();
-    }
-  );
+  const missingFields = requiredFields.filter((field) => {
+    const el = document.getElementById(field);
+    return !el || !el.value.trim();
+  });
 
   if (missingFields.length > 0) {
     const translatedFields = missingFields.map(
@@ -403,7 +454,7 @@ function startActivity() {
 }
 
 function finishActivity() {
-  const lastEntry = tableData.find(entry => !entry.endTime);
+  const lastEntry = tableData.find((entry) => !entry.endTime);
   if (!lastEntry) return;
 
   const endTime = new Date();
@@ -445,7 +496,7 @@ function finishActivity() {
 let liveTimerInterval = null;
 
 function startLiveTimer(startTimestamp) {
-  stopLiveTimer(); // Garante que não haja timers duplicados
+  stopLiveTimer();
   function update() {
     const now = new Date().getTime();
     const elapsed = now - startTimestamp;
@@ -473,26 +524,26 @@ function stopLiveTimer() {
 function deleteLastRow() {
   if (tableData.length > 0) {
     if (confirm("Tem certeza que deseja excluir a última linha da tabela?")) {
-        const lastEntry = tableData[tableData.length - 1];
-        if (!lastEntry.endTime) {
-          stopLiveTimer();
-          currentActivityIndex = -1;
-        }
-        tableData.pop();
-        saveTable();
-        updateExportButtonState();
+      const lastEntry = tableData[tableData.length - 1];
+      if (!lastEntry.endTime) {
+        stopLiveTimer();
+        currentActivityIndex = -1;
+      }
+      tableData.pop();
+      saveTable();
+      updateExportButtonState();
     }
   }
 }
 
 function clearTable() {
-    if (confirm("Tem certeza que deseja limpar TODA a tabela de análise?")) {
-      stopLiveTimer();
-      currentActivityIndex = -1;
-      tableData = [];
-      saveTable();
-      updateExportButtonState();
-    }
+  if (confirm("Tem certeza que deseja limpar TODA a tabela de análise?")) {
+    stopLiveTimer();
+    currentActivityIndex = -1;
+    tableData = [];
+    saveTable();
+    updateExportButtonState();
+  }
 }
 
 function updateExportButtonState() {
@@ -502,15 +553,23 @@ function updateExportButtonState() {
 }
 
 function checkRequiredFields() {
-  const allFields = ["analyst", "bank", "segment", "interviewee", "intervieweeRole"];
+  const allFields = [
+    "analyst",
+    "bank",
+    "segment",
+    "interviewee",
+    "intervieweeRole",
+  ];
   const isValid = allFields.every(
-    (field) => document.getElementById(field) && document.getElementById(field).value.trim() !== ""
+    (field) =>
+      document.getElementById(field) &&
+      document.getElementById(field).value.trim() !== ""
   );
 
-  const activitySelected = document.querySelector('input[name="activity"]:checked') !== null;
+  const activitySelected =
+    document.querySelector('input[name="activity"]:checked') !== null;
   document.getElementById("startBtn").disabled = !isValid || !activitySelected;
 }
-
 
 // Exportação para Excel
 function exportToExcel() {
@@ -569,7 +628,9 @@ function exportToExcel() {
     ["Tempo Médio por Atividade", metrics.averageTime],
     [
       "Atividade Mais Longa",
-      `${metrics.longestActivity.name || "-"} (${metrics.longestActivity.duration || "-"})`,
+      `${metrics.longestActivity.name || "-"} (${
+        metrics.longestActivity.duration || "-"
+      })`,
     ],
     ["Total de Retrabalhos", metrics.totalRework],
     ...metrics.reworkActivities.map((a) => [a.activity, a.count]),
@@ -578,13 +639,24 @@ function exportToExcel() {
   XLSX.utils.book_append_sheet(wb, wsMetrics, "Métricas");
 
   wsData["!cols"] = [
-    { wch: 18 }, { wch: 15 }, { wch: 15 }, { wch: 18 }, { wch: 20 },
-    { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 15 },
-    { wch: 10 }, { wch: 50 },
+    { wch: 18 },
+    { wch: 15 },
+    { wch: 15 },
+    { wch: 18 },
+    { wch: 20 },
+    { wch: 10 },
+    { wch: 10 },
+    { wch: 10 },
+    { wch: 12 },
+    { wch: 15 },
+    { wch: 10 },
+    { wch: 50 },
   ];
   wsMetrics["!cols"] = [{ wch: 25 }, { wch: 20 }];
 
-  const formattedDate = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-");
+  const formattedDate = new Date()
+    .toLocaleDateString("pt-BR")
+    .replace(/\//g, "-");
   const analyst = document.getElementById("analyst").value || "Analista";
   const bank = document.getElementById("bank").value || "Banco";
   const segment = document.getElementById("segment").value || "Segmento";
@@ -594,7 +666,8 @@ function exportToExcel() {
 
   try {
     document.querySelector(".spinner-check").style.opacity = "1";
-    document.querySelector(".checkmark").style.animation = "check-animation 0.6s ease-out forwards";
+    document.querySelector(".checkmark").style.animation =
+      "check-animation 0.6s ease-out forwards";
   } catch (error) {
     console.error("Erro na animação de exportação:", error);
   }
@@ -609,9 +682,11 @@ function exportToExcel() {
 
 function updateMetrics() {
   const metrics = calculateMetrics();
-  document.getElementById("totalActivities").textContent = metrics.totalActivities;
+  document.getElementById("totalActivities").textContent =
+    metrics.totalActivities;
   document.getElementById("averageTime").textContent = metrics.averageTime;
-  document.getElementById("longestActivity").innerHTML = metrics.longestActivity.name
+  document.getElementById("longestActivity").innerHTML = metrics
+    .longestActivity.name
     ? `${metrics.longestActivity.name}<br><small>${metrics.longestActivity.duration}</small>`
     : "-";
   document.getElementById("totalTime").textContent = metrics.totalTime;
@@ -626,7 +701,7 @@ function updateMetrics() {
 }
 
 function calculateMetrics() {
-  const completedData = tableData.filter(entry => entry.endTime);
+  const completedData = tableData.filter((entry) => entry.endTime);
   if (completedData.length === 0)
     return {
       totalActivities: 0,
@@ -647,19 +722,28 @@ function calculateMetrics() {
   const avgMinutes = Math.floor((avgMs % 3600000) / 60000);
   const avgSeconds = Math.floor((avgMs % 60000) / 1000);
 
-  const longest = completedData.reduce((a, b) => (a.duration > b.duration ? a : b));
+  const longest = completedData.reduce((a, b) =>
+    a.duration > b.duration ? a : b
+  );
 
   return {
     totalActivities: completedData.length,
-    averageTime: `${String(avgHours).padStart(2, "0")}:${String(avgMinutes).padStart(2, "0")}:${String(avgSeconds).padStart(2, "0")}`,
-    longestActivity: { name: longest.activity, duration: longest.durationDisplay },
-    totalTime: `${String(totalHours).padStart(2, "0")}:${String(totalMinutes).padStart(2, "0")}:${String(totalSeconds).padStart(2, "0")}`,
+    averageTime: `${String(avgHours).padStart(2, "0")}:${String(
+      avgMinutes
+    ).padStart(2, "0")}:${String(avgSeconds).padStart(2, "0")}`,
+    longestActivity: {
+      name: longest.activity,
+      duration: longest.durationDisplay,
+    },
+    totalTime: `${String(totalHours).padStart(2, "0")}:${String(
+      totalMinutes
+    ).padStart(2, "0")}:${String(totalSeconds).padStart(2, "0")}`,
     totalRework: completedData.reduce((sum, entry) => sum + entry.rework, 0),
     reworkActivities: completedData
       .filter((entry) => entry.rework > 0)
       .reduce((acc, entry) => {
         const key = `${entry.activity}-${entry.interviewee}-${entry.bank}`;
-        const existing = acc.find(a => a.key === key);
+        const existing = acc.find((a) => a.key === key);
         if (existing) {
           existing.count++;
         } else {
@@ -705,7 +789,9 @@ function loadTable() {
             <td class="hidden">${entry.analyst}</td>
             <td class="contrast-table">${entry.rework ? "Sim" : "Não"}</td>
             <td>
-              <textarea oninput="updateObservation(${index}, this.value)">${entry.observation || ''}</textarea>
+              <textarea oninput="updateObservation(${index}, this.value)">${
+        entry.observation || ""
+      }</textarea>
             </td>
         </tr>
     `
@@ -713,16 +799,13 @@ function loadTable() {
     .join("");
 
   document.querySelectorAll("#tableBody textarea").forEach((textarea) => {
-    // Adiciona o listener para o evento 'input'
     textarea.addEventListener("input", autoResizeTextarea);
-    
-    // CORREÇÃO: Usa um timeout para garantir que o textarea foi renderizado antes de ajustar a altura
+
     setTimeout(() => {
-        autoResizeTextarea({ target: textarea });
+      autoResizeTextarea({ target: textarea });
     }, 0);
   });
 
-  // Re-inicia o timer se houver uma atividade em andamento
   currentActivityIndex = tableData.findIndex((entry) => !entry.endTime);
   if (currentActivityIndex !== -1) {
     startLiveTimer(tableData[currentActivityIndex].startTimestamp);
@@ -736,7 +819,7 @@ function autoResizeTextarea(event) {
 }
 
 function updateObservation(index, value) {
-  if(tableData[index]) {
+  if (tableData[index]) {
     tableData[index].observation = value;
     localStorage.setItem("tableData", JSON.stringify(tableData));
   }
