@@ -81,6 +81,7 @@ Um dashboard que transforma seus dados brutos em insights valiosos.
 
 ## 📂 Estrutura de Arquivos
 
+cronoanalise/
 
 ├── index.html    
 ├── styles.css    
