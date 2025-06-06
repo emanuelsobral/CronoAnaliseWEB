@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
 
 <head>
@@ -30,8 +29,6 @@
                 </button>
             </div>
         </nav>
-
-        <!-- Aba 1 - Configurações -->
 
         <div id="tab1" class="tab-content active">
 
@@ -113,10 +110,15 @@
                                 <i class="fas fa-plus-circle input-icon"></i>
                             </div>
                         </label>
-                        <ul id="activitiesList" class="activities-list"></ul>
                     </div>
 
-                    <button onclick="clearActivities()" class="btn-outline-red">
+                    <div class="drag-instruction-container">
+                        <span class="drag-instruction"><i class="fas fa-arrows-alt"></i> Segure e arraste para reorganizar</span>
+                    </div>
+
+                    <ul id="activitiesList" class="activities-list"></ul>
+                    
+                    <button onclick="clearActivities()" class="btn-outline-red" style="margin-top: 20px;">
                         <i class="fas fa-undo"></i>
                         Limpar Todas Atividades
                     </button>
@@ -140,43 +142,55 @@
             </div>
         </div>
 
-        <!-- Aba 2 - Análise -->
-
         <div id="tab2" class="tab-content">
 
             <div class="config-header">
                 <h2><i class="fas fa-clock"></i>CronoAnalise</h2>
             </div>
 
-            <div class="activities-container">
-                <h3 class="activities-title">
-                    <i class="fas fa-list-ol"></i>Atividades Disponíveis
-                    <span class="badge" id="activitiesCount2">0</span>
-                </h3>
-                <ul id="selectedActivities"></ul>
+            <div class="analysis-controls">
+                <span class="drag-instruction"><i class="fas fa-arrows-alt"></i> Segure e arraste para reorganizar</span>
+                <div class="switch-container">
+                    <label class="switch-label" for="layoutSwitch">Layout Lado a Lado:</label>
+                    <label class="switch">
+                        <input type="checkbox" id="layoutSwitch">
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
 
-            <div class="table-container">
-                <table id="timeTable">
-                    <thead>
-                        <tr>
-                            <th class="bank-sec">Banco/Setor</th>
-                            <th class="hidden">Segmento</th>
-                            <th>Entrevistado</th>
-                            <th class="hidden">Cargo Entrevistado</th>
-                            <th>Atividade</th>
-                            <th class="hidden">Data</th>
-                            <th class="hidden">Início</th>
-                            <th class="hidden">Fim</th>
-                            <th>Tempo Total</th>
-                            <th class="hidden">Analista</th>
-                            <th>Retrabalho</th>
-                            <th>Observação</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableBody"></tbody>
-                </table>
+            <div id="analysisContentWrapper">
+                <div class="activities-container">
+                    <h3 class="activities-title">
+                        <i class="fas fa-list-ol"></i>Atividades Disponíveis
+                        <span class="badge" id="activitiesCount2">0</span>
+                    </h3>
+                    <ul id="selectedActivities"></ul>
+                </div>
+
+                <div class="table-container">
+                    <table id="timeTable">
+                        <thead>
+                            <tr>
+                                <th class="bank-sec">Banco/Setor</th>
+                                <th class="hidden">Segmento</th>
+                                <th>Entrevistado</th>
+                                <th class="hidden">Cargo Entrevistado</th>
+                                <th>Atividade</th>
+                                <th class="hidden">Data</th>
+                                <th class="hidden">Início</th>
+                                <th class="hidden">Fim</th>
+                                <th>Tempo Total</th>
+                                <th class="hidden">Analista</th>
+                                <th>Retrabalho</th>
+                                <th>Observação</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
             </div>
+
 
             <div class="controls">
                 <div class="btn-group">
@@ -199,11 +213,9 @@
                 </div>
 
                 <div class="controls">
-
                     <div class="config-header">
                         <h2><i class="fas fa-eraser"></i> Deletar Tabela</h2>
                     </div>
-
                     <div class="btn-group">
                         <button class="btn-danger" onclick="clearTable()">
                             <i class="fas fa-eraser"></i>
@@ -224,7 +236,6 @@
 
             <div class="controls">
                 <div class="config-header"></div>
-
                 <div class="btn-group-moves-tab2">
                     <button class="btn-primary" onclick="showTab(0)">
                         <i class="fas fa-backward"></i>
@@ -238,15 +249,12 @@
             </div>
         </div>
 
-        <!-- Aba 3 - Métricas -->
-
         <div id="tab3" class="tab-content">
             <div class="config-header">
                 <h2><i class="fas fa-chart-line"></i>Métricas de Desempenho</h2>
             </div>
 
             <div class="metrics-grid">
-                <!-- Cartões principais -->
                 <div class="metric-card primary">
                     <div class="metric-icon"><i class="fas fa-tasks"></i></div>
                     <div class="metric-content">
@@ -263,8 +271,6 @@
                     </div>
                 </div>
 
-                <!-- Cartões secundários -->
-
                 <div class="metric-card secondary">
                     <i class="fas fa-hourglass-half metric-icon-small"></i>
                     <span class="metric-title">Tempo Médio por Atividade</span>
@@ -277,8 +283,6 @@
                     <span class="metric-value" id="totalRework">0</span>
                 </div>
 
-                <!-- Cartão de atividade mais longa -->
-
                 <div class="metric-card highlight">
                     <div class="metric-icon"><i class="fas fa-chart-line"></i></div>
                     <div class="metric-content">
@@ -286,8 +290,6 @@
                         <span class="metric-value" id="longestActivity">-</span>
                     </div>
                 </div>
-
-                <!-- Lista de retrabalhos -->
 
                 <div class="rework-list">
                     <h3><i class="fas fa-exclamation-circle"></i> Atividades com Retrabalho</h3>

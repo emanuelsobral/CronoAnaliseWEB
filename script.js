@@ -35,14 +35,12 @@ if (currentActivityIndex !== -1) {
   const activeEntry = tableData[currentActivityIndex];
 
   // espera um pequeno tempo para garantir que a tabela foi renderizada
-
   setTimeout(() => {
     startLiveTimer(activeEntry.startTimestamp);
   }, 50); // 50ms é o suficiente
 }
 
 // Funções básicas de persistência
-
 function saveActivities() {
   localStorage.setItem("activities", JSON.stringify(activities));
   loadActivities();
@@ -58,7 +56,6 @@ function saveAppConfig() {
   localStorage.setItem("appConfig", JSON.stringify(appConfig));
 
   // Atualizar indicadores visuais
-
   const fields = document.querySelectorAll(".config-field");
   fields.forEach((field) => {
     const input = field.querySelector("input");
@@ -66,198 +63,90 @@ function saveAppConfig() {
   });
 }
 
-// Atualize o event listener do DOMContentLoaded
-
 document.addEventListener("DOMContentLoaded", () => {
   // Carregar configurações
-
   document.getElementById("analysisName").value = appConfig.analysisName;
   document.getElementById("analyst").value = appConfig.analyst;
   document.getElementById("bank").value = appConfig.bank;
   document.getElementById("segment").value = appConfig.segment;
   document.getElementById("interviewee").value = appConfig.interviewee;
-  document.getElementById("intervieweeRole").value = appConfig.intervieweeRole; // Carregar o valor do novo campo
+  document.getElementById("intervieweeRole").value = appConfig.intervieweeRole;
 
   // Adicionar listeners para salvar automaticamente
-
   const configFields = [
     "analysisName",
     "analyst",
     "bank",
     "segment",
     "interviewee",
-    "intervieweeRole", // Novo campo
+    "intervieweeRole",
   ];
 
   configFields.forEach((field) => {
     document.getElementById(field).addEventListener("input", (e) => {
       appConfig[field] = e.target.value;
-
       saveAppConfig();
       updateExportButtonState();
       checkRequiredFields();
-
     });
   });
-});
 
-function updateFilledStatus() {
-  document
-    .querySelectorAll(".input-group .config-input, .input-container input")
-    .forEach((input) => {
-      const parent = input.closest(".input-group")
-        ? input.closest(".config-label")
-        : input.closest(".input-container");
-      if (input.value.trim() !== "") {
-        parent.classList.add("filled");
-      } else {
-        parent.classList.remove("filled");
+  // --- LÓGICA DO SWITCH DE LAYOUT ---
+  const layoutSwitch = document.getElementById('layoutSwitch');
+  const analysisContentWrapper = document.getElementById('analysisContentWrapper');
+
+  layoutSwitch.addEventListener('change', () => {
+    analysisContentWrapper.classList.toggle('side-by-side', layoutSwitch.checked);
+  });
+
+  // --- LÓGICA DE DRAG AND DROP OTIMIZADA (PARA AMBAS AS LISTAS) ---
+  
+  function addDragAndDropListeners(container) {
+    container.addEventListener('dragstart', (e) => {
+      if (e.target.matches('li')) {
+          e.target.classList.add('dragging');
       }
     });
-}
 
-// Adicione event listeners para todos os inputs
+    container.addEventListener('dragend', (e) => {
+      if (e.target.matches('li')) {
+          e.target.classList.remove('dragging');
+          
+          const liElements = [...container.querySelectorAll('li')];
+          const nameOrder = liElements.map(li => {
+              const textElement = li.querySelector('label') || li.querySelector('span');
+              return textElement.textContent.trim().replace(/^\d+\.\s*/, '');
+          });
 
-document.querySelectorAll("input").forEach((input) => {
-  input.addEventListener("input", updateFilledStatus);
-});
-
-// Execute na inicialização
-
-document.addEventListener("DOMContentLoaded", updateFilledStatus);
-
-function updateRequiredLabels() {
-  document.querySelectorAll(".input-container").forEach((container) => {
-    const input = container.querySelector("input");
-    const label = container.querySelector("label");
-
-    // Verifica se o input e o label existem antes de acessar suas propriedades
-
-    if (input && label) {
-      if (input.value.trim() !== "") {
-        label.classList.remove("required-label");
-      } else {
-        label.classList.add("required-label");
+          activities.sort((a, b) => nameOrder.indexOf(a.name) - nameOrder.indexOf(b.name));
+          saveActivities();
       }
-    }
-  });
-}
+    });
 
+    container.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const draggingItem = document.querySelector('.dragging');
+      if (!draggingItem) return;
 
-// Adicione event listeners
+      const overElement = e.target.closest('li');
+      if (overElement == null) return;
 
-document.querySelectorAll(".input-container input").forEach((input) => {
-  input.addEventListener("input", updateRequiredLabels);
-});
+      const box = overElement.getBoundingClientRect();
+      const offset = e.clientY - box.top - box.height / 2;
 
-// Execute na inicialização
-
-document.addEventListener("DOMContentLoaded", updateRequiredLabels);
-function loadActivities() {
-  const list = document.getElementById("activitiesList");
-  list.innerHTML = activities
-    .map(
-      (activity, index) => `
-        <li>
-            <span>${activity.name}</span>
-            <button onclick="deleteActivity(${index})">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-        </li>
-    `
-    )
-    .join("");
-
-  // Atualiza a lista na aba Análise
-
-  const analysisList = document.getElementById("selectedActivities");
-  analysisList.innerHTML = activities
-    .map(
-      (activity, index) => `
-        <li onclick="document.getElementById('activity${index}').click()">
-            <input type="radio" name="activity" id="activity${index}" value="${activity.name}">
-            <label for="activity${index}">${activity.name}</label>
-            <button onclick="event.stopPropagation(); deleteActivity(${index})"><i class="fas fa-trash-alt"></i></button>
-        </li>
-    `
-    )
-    .join("");
-  document.getElementById("activitiesCount").textContent = activities.length;
-  document.getElementById("activitiesCount2").textContent = activities.length;
-  checkRequiredFields();
-}
-
-function handleActivityInput(e) {
-  if (e.key === "Enter") {
-    const newActivity = e.target.value.trim().toLowerCase();
-    if (!newActivity) return;
-
-    // Verificar duplicidade
-
-    if (activities.some((a) => a.name.toLowerCase() === newActivity)) {
-      alert("Atividade já existe!");
-      e.target.value = "";
-      return;
-    }
-
-    activities.push({ name: newActivity });
-    e.target.value = "";
-    saveActivities();
-    loadActivities();
+      if (offset < 0) {
+        overElement.parentNode.insertBefore(draggingItem, overElement);
+      } else {
+        overElement.parentNode.insertBefore(draggingItem, overElement.nextSibling);
+      }
+    });
   }
-}
+  
+  // Aplica a lógica para as duas listas
+  addDragAndDropListeners(document.getElementById('selectedActivities')); // Aba Análise
+  addDragAndDropListeners(document.getElementById('activitiesList'));   // Aba Configurações
 
-// Funções de atividades
-
-function deleteActivity(index) {
-  activities.splice(index, 1);
-  saveActivities();
-  loadTable();
-}
-
-function clearActivities() {
-  activities = [];
-  saveActivities();
-}
-
-function clearAll() {
-
-  // Clear activities
-
-  activities = [];
-  saveActivities(); // Save the cleared activities to localStorage
-
-  // Clear appConfig
-
-  appConfig = {
-    analysisName: "",
-    analyst: "",
-    bank: "",
-    segment: "",
-    interviewee: "",
-    intervieweeRole: "", // Ensure the new field is reset
-  };
-
-  saveAppConfig(); // Save the cleared appConfig to localStorage
-
-  // Optionally, clear the input fields in the UI
-
-  document.getElementById("analysisName").value = "";
-  document.getElementById("analyst").value = "";
-  document.getElementById("bank").value = "";
-  document.getElementById("segment").value = "";
-  document.getElementById("interviewee").value = "";
-  document.getElementById("intervieweeRole").value = "";
-
-  // Update the UI to reflect the cleared state
-
-  loadActivities();
-  updateFilledStatus();
-  updateRequiredLabels();
-  updateExportButtonState();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
+  // --- CARREGAMENTO INICIAL E OUTROS LISTENERS ---
   const intervieweeRoleSelect = document.getElementById("intervieweeRole");
   const otherRoleContainer = document.getElementById("otherRoleContainer");
   const otherRoleInput = document.getElementById("otherRoleInput");
@@ -271,41 +160,201 @@ document.addEventListener("DOMContentLoaded", () => {
       otherRoleInput.addEventListener("input", (e) => {
         appConfig.intervieweeRole = e.target.value;
         saveAppConfig();
-        updateExportButtonState(); // Atualiza o estado do botão de exportação
+        updateExportButtonState();
       });
     } else {
       otherRoleContainer.style.display = "none";
       otherRoleInput.required = false;
-      otherRoleInput.value = ""; // Limpa o campo de texto
+      otherRoleInput.value = "";
       otherRoleInput.removeAttribute("id");
       intervieweeRoleSelect.setAttribute("id", "intervieweeRole");
-
       appConfig.intervieweeRole = this.value;
-
       saveAppConfig();
-      updateExportButtonState(); // Atualiza o estado do botão de exportação
+      updateExportButtonState();
     }
   });
+  
+  document.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("input", updateFilledStatus);
+  });
+
+  document.querySelectorAll(".input-container input").forEach((input) => {
+    input.addEventListener("input", updateRequiredLabels);
+  });
+  
+  document.getElementById("exportBtn").addEventListener("click", () => {
+    document.querySelector(".spinner-circle").style.animation = "spin 0.8s linear infinite";
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target.name === "activity") {
+      checkRequiredFields();
+    }
+  });
+  
+  document.getElementById("newActivity").addEventListener("keypress", (e) => {
+    if (e.key === "Enter" && e.target.value.trim()) {
+      const newActivity = e.target.value.trim().toLowerCase();
+
+      if (activities.some((activity) => activity.name.toLowerCase() === newActivity)) {
+        alert("Atividade já existe!");
+        e.target.value = "";
+        return;
+      }
+      activities.push({ name: newActivity });
+      e.target.value = "";
+      saveActivities();
+    }
+  });
+
+  // Carregamento inicial de dados e UI
+  loadActivities();
+  loadTable();
+  updateMetrics();
+  updateExportButtonState();
+  updateFilledStatus();
+  updateRequiredLabels();
 });
 
 
-// Funções da tabela
+function updateFilledStatus() {
+  document
+    .querySelectorAll(".input-group .config-input, .input-container input, .input-container select")
+    .forEach((input) => {
+      const parent = input.closest(".input-group")
+        ? input.closest(".config-label")
+        : input.closest(".input-container");
+      if (input.value.trim() !== "") {
+        parent.classList.add("filled");
+      } else {
+        parent.classList.remove("filled");
+      }
+    });
+}
 
+function updateRequiredLabels() {
+  document.querySelectorAll(".input-container").forEach((container) => {
+    const input = container.querySelector("input, select");
+    const label = container.querySelector("label");
+
+    if (input && label) {
+      if (input.value.trim() !== "") {
+        label.classList.remove("required-label");
+      } else {
+        label.classList.add("required-label");
+      }
+    }
+  });
+}
+
+function loadActivities() {
+  const list = document.getElementById("activitiesList");
+  list.innerHTML = activities
+    .map(
+      (activity, index) => `
+        <li draggable="true">
+            <span><strong>${index + 1}.</strong> ${activity.name}</span>
+            <button onclick="deleteActivity(${index})">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+        </li>
+    `
+    )
+    .join("");
+
+  const analysisList = document.getElementById("selectedActivities");
+  analysisList.innerHTML = activities
+    .map(
+      (activity, index) => `
+        <li draggable="true">
+            <input type="radio" name="activity" id="activity${index}" value="${activity.name}">
+            <label for="activity${index}"><strong>${index + 1}.</strong> ${activity.name}</label>
+            <button onclick="event.stopPropagation(); deleteActivity(${index})"><i class="fas fa-trash-alt"></i></button>
+        </li>
+    `
+    )
+    .join("");
+
+  document.getElementById("activitiesCount").textContent = activities.length;
+  document.getElementById("activitiesCount2").textContent = activities.length;
+  checkRequiredFields();
+}
+
+function handleActivityInput(e) {
+  if (e.key === "Enter") {
+    const newActivity = e.target.value.trim().toLowerCase();
+    if (!newActivity) return;
+
+    if (activities.some((a) => a.name.toLowerCase() === newActivity)) {
+      alert("Atividade já existe!");
+      e.target.value = "";
+      return;
+    }
+
+    activities.push({ name: newActivity });
+    e.target.value = "";
+    saveActivities();
+  }
+}
+
+function deleteActivity(index) {
+  if (confirm(`Tem certeza que deseja excluir a atividade "${activities[index].name}"?`)) {
+    activities.splice(index, 1);
+    saveActivities();
+  }
+}
+
+function clearActivities() {
+  if (confirm("Tem certeza que deseja limpar TODAS as atividades?")) {
+    activities = [];
+    saveActivities();
+  }
+}
+
+function clearAll() {
+  if (confirm("ATENÇÃO: Isso limpará TODOS os dados da aplicação, incluindo configurações, atividades e a tabela de análise. Deseja continuar?")) {
+    activities = [];
+    appConfig = {
+      analysisName: "", analyst: "", bank: "", segment: "", interviewee: "", intervieweeRole: "",
+    };
+    tableData = [];
+    
+    saveActivities();
+    saveAppConfig();
+    saveTable();
+
+    document.getElementById("analysisName").value = "";
+    document.getElementById("analyst").value = "";
+    document.getElementById("bank").value = "";
+    document.getElementById("segment").value = "";
+    document.getElementById("interviewee").value = "";
+    document.getElementById("intervieweeRole").value = "Gerente"; // Reseta para o padrão
+    document.getElementById('otherRoleContainer').style.display = 'none';
+
+    updateFilledStatus();
+    updateRequiredLabels();
+  }
+}
+
+
+// Funções da tabela
 function startActivity() {
   const missingFields = requiredFields.filter(
-    (field) => !document.getElementById(field).value.trim()
+    (field) => {
+       const el = document.getElementById(field);
+       return !el || !el.value.trim();
+    }
   );
+
   if (missingFields.length > 0) {
     const translatedFields = missingFields.map(
-      (field) => fieldTranslations[field]
+      (field) => fieldTranslations[field] || field
     );
     alert(
       `Preencha todos os campos obrigatórios: ${translatedFields.join(", ")}`
     );
     return;
   }
-
-  // impede de iniciar uma nova atividade se já houver uma em andamento
 
   if (currentActivityIndex !== -1) {
     alert("Finalize a atividade atual antes de iniciar uma nova!");
@@ -315,7 +364,6 @@ function startActivity() {
   }
 
   const activity = document.querySelector('input[name="activity"]:checked');
-
   if (!activity) {
     alert("Selecione uma atividade!");
     return;
@@ -326,15 +374,14 @@ function startActivity() {
     bank: document.getElementById("bank").value,
     segment: document.getElementById("segment").value,
     interviewee: document.getElementById("interviewee").value,
-    intervieweeRole: document.getElementById("intervieweeRole").value, // Novo campo
+    intervieweeRole: document.getElementById("intervieweeRole").value,
     activityName: activity.value,
     date: now.toLocaleDateString("pt-BR"),
     startTime: now.toLocaleTimeString("pt-BR", {
       hour: "2-digit",
       minute: "2-digit",
-      second: "2-digit", // Adicionado segundos
+      second: "2-digit",
     }),
-
     startTimestamp: now.getTime(),
     endTime: null,
     endTimestamp: null,
@@ -347,7 +394,6 @@ function startActivity() {
   };
 
   tableData.push(newEntry);
-
   saveTable();
   updateExportButtonState();
   checkRequiredFields();
@@ -357,13 +403,12 @@ function startActivity() {
 }
 
 function finishActivity() {
-  const lastEntry = tableData[tableData.length - 1];
-  if (!lastEntry || lastEntry.endTime) return;
+  const lastEntry = tableData.find(entry => !entry.endTime);
+  if (!lastEntry) return;
+
   const endTime = new Date();
   const startTime = new Date(lastEntry.startTimestamp);
   const durationMs = endTime - startTime;
-
-  // Convert milliseconds to hours, minutes, and seconds
 
   const hours = Math.floor(durationMs / (1000 * 60 * 60));
   const minutes = Math.floor((durationMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -372,7 +417,7 @@ function finishActivity() {
   lastEntry.endTime = endTime.toLocaleTimeString("pt-BR", {
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit", // Added seconds
+    second: "2-digit",
   });
 
   lastEntry.endTimestamp = endTime.getTime();
@@ -381,8 +426,6 @@ function finishActivity() {
     `${String(hours).padStart(2, "0")}:` +
     `${String(minutes).padStart(2, "0")}:` +
     `${String(seconds).padStart(2, "0")}`;
-
-  // Check for rework based on both activity and interviewee
 
   const previousEntries = tableData.filter(
     (entry) =>
@@ -396,13 +439,13 @@ function finishActivity() {
   saveTable();
   updateExportButtonState();
   currentActivityIndex = -1;
-  checkRequiredFields();
   stopLiveTimer();
 }
 
 let liveTimerInterval = null;
 
 function startLiveTimer(startTimestamp) {
+  stopLiveTimer(); // Garante que não haja timers duplicados
   function update() {
     const now = new Date().getTime();
     const elapsed = now - startTimestamp;
@@ -418,8 +461,7 @@ function startLiveTimer(startTimestamp) {
       span.textContent = display;
     }
   }
-
-  update(); // Mostra imediatamente
+  update();
   liveTimerInterval = setInterval(update, 1000);
 }
 
@@ -429,17 +471,28 @@ function stopLiveTimer() {
 }
 
 function deleteLastRow() {
-  finishActivity(); // Finaliza a atividade atual antes de deletar
-  tableData.pop();
-  saveTable();
-  updateExportButtonState();
+  if (tableData.length > 0) {
+    if (confirm("Tem certeza que deseja excluir a última linha da tabela?")) {
+        const lastEntry = tableData[tableData.length - 1];
+        if (!lastEntry.endTime) {
+          stopLiveTimer();
+          currentActivityIndex = -1;
+        }
+        tableData.pop();
+        saveTable();
+        updateExportButtonState();
+    }
+  }
 }
 
 function clearTable() {
-  finishActivity(); // Finaliza a atividade atual antes de limpar a tabela
-  tableData = [];
-  saveTable();
-  updateExportButtonState();
+    if (confirm("Tem certeza que deseja limpar TODA a tabela de análise?")) {
+      stopLiveTimer();
+      currentActivityIndex = -1;
+      tableData = [];
+      saveTable();
+      updateExportButtonState();
+    }
 }
 
 function updateExportButtonState() {
@@ -449,37 +502,29 @@ function updateExportButtonState() {
 }
 
 function checkRequiredFields() {
-  const requiredFields = ["analyst", "bank", "segment", "interviewee"];
-  const isValid = requiredFields.every(
-    (field) => document.getElementById(field).value.trim() !== ""
+  const allFields = ["analyst", "bank", "segment", "interviewee", "intervieweeRole"];
+  const isValid = allFields.every(
+    (field) => document.getElementById(field) && document.getElementById(field).value.trim() !== ""
   );
 
-  const activitySelected =
-  document.querySelector('input[name="activity"]:checked') !== null;
+  const activitySelected = document.querySelector('input[name="activity"]:checked') !== null;
   document.getElementById("startBtn").disabled = !isValid || !activitySelected;
 }
 
-document.addEventListener("click", (e) => {
-  if (e.target.name === "activity") {
-    checkRequiredFields();
-  }
-});
 
 // Exportação para Excel
-
 function exportToExcel() {
-  finishActivity(); // Garante que a última atividade seja finalizada antes da exportação
+  if (currentActivityIndex !== -1) {
+    finishActivity();
+  }
   const analysisName = document.getElementById("analysisName").value.trim();
-
   if (!analysisName) {
-    showAnalysisNameError();
+    alert("Por favor, preencha o 'Nome da Análise' para exportar.");
     return;
   }
 
   const loadingOverlay = document.getElementById("loadingOverlay");
   const exportBtn = document.getElementById("exportBtn");
-
-  // Mostrar animação
 
   loadingOverlay.style.display = "flex";
   exportBtn.disabled = true;
@@ -498,7 +543,6 @@ function exportToExcel() {
       "Retrabalho",
       "Observação",
     ],
-
     ...tableData.map((entry) => [
       entry.bank,
       entry.segment,
@@ -507,7 +551,7 @@ function exportToExcel() {
       entry.activity,
       entry.date,
       entry.startTime,
-      entry.endTime || "Em andamento",
+      entry.endTime || "N/A",
       entry.durationDisplay,
       entry.analyst,
       entry.rework ? "1" : "0",
@@ -525,9 +569,7 @@ function exportToExcel() {
     ["Tempo Médio por Atividade", metrics.averageTime],
     [
       "Atividade Mais Longa",
-      `${metrics.longestActivity.name || "-"} (${
-        metrics.longestActivity.duration || "-"
-      })`,
+      `${metrics.longestActivity.name || "-"} (${metrics.longestActivity.duration || "-"})`,
     ],
     ["Total de Retrabalhos", metrics.totalRework],
     ...metrics.reworkActivities.map((a) => [a.activity, a.count]),
@@ -535,48 +577,27 @@ function exportToExcel() {
 
   XLSX.utils.book_append_sheet(wb, wsMetrics, "Métricas");
 
-  // Ajustar largura das colunas
-
   wsData["!cols"] = [
-    { wch: 18 },
-    { wch: 15 },
-    { wch: 15 },
-    { wch: 12 },
-    { wch: 10 },
-    { wch: 10 },
-    { wch: 12 },
-    { wch: 15 },
-    { wch: 10 },
-    { wch: 12 },
-    { wch: 12 },
-    { wch: 50 },
+    { wch: 18 }, { wch: 15 }, { wch: 15 }, { wch: 18 }, { wch: 20 },
+    { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 12 }, { wch: 15 },
+    { wch: 10 }, { wch: 50 },
   ];
-
   wsMetrics["!cols"] = [{ wch: 25 }, { wch: 20 }];
 
-  // Nome Do excel, provavelmente tinha um jeito melhor de fazer isso, mas não sei
-
-  const analysiName = document.getElementById("analysisName").value;
-  const now = new Date();
-  const formattedDate = now.toLocaleDateString("pt-BR").replace(/\//g, "-");
+  const formattedDate = new Date().toLocaleDateString("pt-BR").replace(/\//g, "-");
   const analyst = document.getElementById("analyst").value || "Analista";
   const bank = document.getElementById("bank").value || "Banco";
   const segment = document.getElementById("segment").value || "Segmento";
-  const fileName = `${analysiName}_${bank}_${segment}_${formattedDate}_${analyst}.xlsx`;
+  const fileName = `${analysisName}_${bank}_${segment}_${formattedDate}_${analyst}.xlsx`;
 
   XLSX.writeFile(wb, fileName);
 
   try {
-    // Animação de sucesso
     document.querySelector(".spinner-check").style.opacity = "1";
-    document.querySelector(".checkmark").style.animation =
-      "check-animation 0.6s ease-out forwards";
+    document.querySelector(".checkmark").style.animation = "check-animation 0.6s ease-out forwards";
   } catch (error) {
-    console.error("Erro na exportação:", error);
-    alert("Erro ao exportar arquivo!");
+    console.error("Erro na animação de exportação:", error);
   }
-
-  // Esconder animação após 1.2s
 
   setTimeout(() => {
     loadingOverlay.style.display = "none";
@@ -586,35 +607,27 @@ function exportToExcel() {
   }, 1200);
 }
 
-document.getElementById("exportBtn").addEventListener("click", () => {
-  document.querySelector(".spinner-circle").style.animation =
-    "spin 0.8s linear infinite";
-});
-
 function updateMetrics() {
   const metrics = calculateMetrics();
-  document.getElementById("totalActivities").textContent =
-    metrics.totalActivities;
+  document.getElementById("totalActivities").textContent = metrics.totalActivities;
   document.getElementById("averageTime").textContent = metrics.averageTime;
-  document.getElementById("longestActivity").innerHTML = metrics.longestActivity
-    .name
+  document.getElementById("longestActivity").innerHTML = metrics.longestActivity.name
     ? `${metrics.longestActivity.name}<br><small>${metrics.longestActivity.duration}</small>`
     : "-";
   document.getElementById("totalTime").textContent = metrics.totalTime;
   document.getElementById("totalRework").textContent = metrics.totalRework;
   const reworkList = document.getElementById("reworkActivities");
   reworkList.innerHTML = metrics.reworkActivities
-
     .map(
       (a) =>
         `<li>Nome: <span class="metric_interviewee">${a.interviewee}</span> </BR> ID/Plataforma: <span class="metric_interviewee">${a.id}</span> </BR> ATV: <span class="metric_interviewee">${a.activity}</span> <span class="metric_number">${a.count}x</span></li>`
     )
-
     .join("");
 }
 
 function calculateMetrics() {
-  if (tableData.length === 0)
+  const completedData = tableData.filter(entry => entry.endTime);
+  if (completedData.length === 0)
     return {
       totalActivities: 0,
       averageTime: "00:00:00",
@@ -624,56 +637,37 @@ function calculateMetrics() {
       reworkActivities: [],
     };
 
-  const totalMs = tableData.reduce((sum, entry) => sum + entry.duration, 0);
+  const totalMs = completedData.reduce((sum, entry) => sum + entry.duration, 0);
+  const totalHours = Math.floor(totalMs / 3600000);
+  const totalMinutes = Math.floor((totalMs % 3600000) / 60000);
+  const totalSeconds = Math.floor((totalMs % 60000) / 1000);
 
-  // Precise calculation with seconds
+  const avgMs = totalMs / completedData.length;
+  const avgHours = Math.floor(avgMs / 3600000);
+  const avgMinutes = Math.floor((avgMs % 3600000) / 60000);
+  const avgSeconds = Math.floor((avgMs % 60000) / 1000);
 
-  const totalHours = Math.floor(totalMs / (1000 * 60 * 60));
-  const totalMinutes = Math.floor((totalMs % (1000 * 60 * 60)) / (1000 * 60));
-  const totalSeconds = Math.floor((totalMs % (1000 * 60)) / 1000);
-
-  // Average calculation
-
-  const avgMs = totalMs / tableData.length;
-  const avgHours = Math.floor(avgMs / (1000 * 60 * 60));
-  const avgMinutes = Math.floor((avgMs % (1000 * 60 * 60)) / (1000 * 60));
-  const avgSeconds = Math.floor((avgMs % (1000 * 60)) / 1000);
+  const longest = completedData.reduce((a, b) => (a.duration > b.duration ? a : b));
 
   return {
-    totalActivities: tableData.length,
-    averageTime:
-      `${String(avgHours).padStart(2, "0")}:` +
-      `${String(avgMinutes).padStart(2, "0")}:` +
-      `${String(avgSeconds).padStart(2, "0")}`,
-    longestActivity: {
-      name: tableData.reduce((a, b) => (a.duration > b.duration ? a : b))
-        .activity,
-      duration: tableData.reduce((a, b) => (a.duration > b.duration ? a : b))
-        .durationDisplay,
-    },
-
-    totalTime:
-      `${String(totalHours).padStart(2, "0")}:` +
-      `${String(totalMinutes).padStart(2, "0")}:` +
-      `${String(totalSeconds).padStart(2, "0")}`,
-    totalRework: tableData.reduce((sum, entry) => sum + entry.rework, 0),
-    reworkActivities: tableData
+    totalActivities: completedData.length,
+    averageTime: `${String(avgHours).padStart(2, "0")}:${String(avgMinutes).padStart(2, "0")}:${String(avgSeconds).padStart(2, "0")}`,
+    longestActivity: { name: longest.activity, duration: longest.durationDisplay },
+    totalTime: `${String(totalHours).padStart(2, "0")}:${String(totalMinutes).padStart(2, "0")}:${String(totalSeconds).padStart(2, "0")}`,
+    totalRework: completedData.reduce((sum, entry) => sum + entry.rework, 0),
+    reworkActivities: completedData
       .filter((entry) => entry.rework > 0)
       .reduce((acc, entry) => {
-        const existing = acc.find(
-          (a) =>
-            a.activity === entry.activity &&
-            a.interviewee === entry.interviewee &&
-            a.id === entry.bank
-        );
-
+        const key = `${entry.activity}-${entry.interviewee}-${entry.bank}`;
+        const existing = acc.find(a => a.key === key);
         if (existing) {
           existing.count++;
         } else {
           acc.push({
+            key: key,
             activity: entry.activity,
             interviewee: entry.interviewee,
-            id: entry.bank, // Assuming 'bank' is used as an ID
+            id: entry.bank,
             count: 1,
           });
         }
@@ -683,49 +677,15 @@ function calculateMetrics() {
 }
 
 // Controle de abas
-
 function showTab(index) {
   document.querySelectorAll(".tab-content").forEach((tab, i) => {
     tab.classList.toggle("active", i === index);
   });
-
   document.querySelectorAll(".tab-btn").forEach((btn, i) => {
     btn.classList.toggle("active", i === index);
   });
-
   if (index === 2) updateMetrics();
 }
-
-// Carregamento inicial
-
-document.addEventListener("DOMContentLoaded", () => {
-  loadActivities();
-  loadTable();
-  updateMetrics();
-  updateExportButtonState();
-
-  document.getElementById("newActivity").addEventListener("keypress", (e) => {
-    if (e.key === "Enter" && e.target.value.trim()) {
-      const newActivity = e.target.value.trim().toLowerCase();
-
-      // Verificar duplicidade
-
-      if (
-        activities.some(
-          (activity) => activity.name.toLowerCase() === newActivity
-        )
-      ) {
-        alert("Atividade já existe!");
-        e.target.value = "";
-        return;
-      }
-
-      activities.push({ name: newActivity });
-      e.target.value = "";
-      saveActivities();
-    }
-  });
-});
 
 function loadTable() {
   const tbody = document.getElementById("tableBody");
@@ -736,46 +696,48 @@ function loadTable() {
             <td>${entry.bank}</td>
             <td class="hidden">${entry.segment}</td>
             <td>${entry.interviewee}</td>
-            <td class="hidden">${
-              entry.intervieweeRole
-            }</td> <!-- Novo campo na tabela -->
+            <td class="hidden">${entry.intervieweeRole}</td>
             <td class="contrast-table">${entry.activity}</td>
             <td class="hidden">${entry.date}</td>
             <td class="hidden">${entry.startTime}</td>
             <td class="hidden">${entry.endTime || "Em andamento"}</td>
-            <td>${
-              entry.durationDisplay ||
-              (entry.endTime
-                ? formatDuration(entry.duration)
-                : '<span id="liveDuration">00:00:00</span>')
-            }</td>
+            <td>${entry.durationDisplay}</td>
             <td class="hidden">${entry.analyst}</td>
             <td class="contrast-table">${entry.rework ? "Sim" : "Não"}</td>
             <td>
-
-              <textarea oninput="updateObservation(${index}, this.value)">${
-        entry.observation
-      }</textarea>
+              <textarea oninput="updateObservation(${index}, this.value)">${entry.observation || ''}</textarea>
             </td>
         </tr>
-
     `
     )
     .join("");
 
   document.querySelectorAll("#tableBody textarea").forEach((textarea) => {
+    // Adiciona o listener para o evento 'input'
     textarea.addEventListener("input", autoResizeTextarea);
+    
+    // CORREÇÃO: Usa um timeout para garantir que o textarea foi renderizado antes de ajustar a altura
+    setTimeout(() => {
+        autoResizeTextarea({ target: textarea });
+    }, 0);
   });
+
+  // Re-inicia o timer se houver uma atividade em andamento
+  currentActivityIndex = tableData.findIndex((entry) => !entry.endTime);
+  if (currentActivityIndex !== -1) {
+    startLiveTimer(tableData[currentActivityIndex].startTimestamp);
+  }
 }
 
 function autoResizeTextarea(event) {
   const textarea = event.target;
-  textarea.style.height = "auto"; // Reseta a altura para calcular a nova altura
-  textarea.style.height = textarea.scrollHeight + "px"; // Define a altura com base no scrollHeight
+  textarea.style.height = "auto";
+  textarea.style.height = textarea.scrollHeight + "px";
 }
 
 function updateObservation(index, value) {
-  tableData[index].observation = value;
-
-  localStorage.setItem("tableData", JSON.stringify(tableData)); // Salva diretamente no localStorage
+  if(tableData[index]) {
+    tableData[index].observation = value;
+    localStorage.setItem("tableData", JSON.stringify(tableData));
+  }
 }
