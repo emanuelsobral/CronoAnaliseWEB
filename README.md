@@ -82,7 +82,7 @@ Um dashboard que transforma seus dados brutos em insights valiosos.
 ## 📂 Estrutura de Arquivos
 
 cronoanalise/
-├── index.html          # Interface principal
-├── styles.css         # Estilos customizados
-├── script.js          # Lógica de aplicação
-└── README.md          # Documentação
+├── index.html    
+├── styles.css    
+├── script.js     
+└── README.md     
