@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const draggingItem = document.querySelector(".dragging");
       if (!draggingItem) return;
-        
+
       // OTIMIZAÇÃO: Lógica de Auto-Scroll
       const scrollableParent = container.parentElement;
       const parentStyle = window.getComputedStyle(scrollableParent);
@@ -332,14 +332,9 @@ function handleActivityInput(e) {
 }
 
 function deleteActivity(index) {
-  if (
-    confirm(
-      `Tem certeza que deseja excluir a atividade "${activities[index].name}"?`
-    )
-  ) {
-    activities.splice(index, 1);
-    saveActivities();
-  }
+  // Confirmação removida para agilizar o processo
+  activities.splice(index, 1);
+  saveActivities();
 }
 
 function clearActivities() {
@@ -523,16 +518,15 @@ function stopLiveTimer() {
 
 function deleteLastRow() {
   if (tableData.length > 0) {
-    if (confirm("Tem certeza que deseja excluir a última linha da tabela?")) {
-      const lastEntry = tableData[tableData.length - 1];
-      if (!lastEntry.endTime) {
-        stopLiveTimer();
-        currentActivityIndex = -1;
-      }
-      tableData.pop();
-      saveTable();
-      updateExportButtonState();
+    // Confirmação removida para agilizar o processo
+    const lastEntry = tableData[tableData.length - 1];
+    if (!lastEntry.endTime) {
+      stopLiveTimer();
+      currentActivityIndex = -1;
     }
+    tableData.pop();
+    saveTable();
+    updateExportButtonState();
   }
 }
 
