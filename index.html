@@ -122,6 +122,16 @@
                         <i class="fas fa-undo"></i>
                         Limpar Todas Atividades
                     </button>
+                    <div class="btn-group" style="margin-top: 10px;">
+                        <button onclick="importActivities()" class="btn-secondary">
+                            <i class="fas fa-file-import"></i>
+                            Importar Lista
+                        </button>
+                        <button onclick="exportActivities()" class="btn-secondary">
+                            <i class="fas fa-file-export"></i>
+                            Exportar Lista
+                        </button>
+                    </div>
                 </div>
                 <div class="btn-group">
                     <button class="btn-danger" onclick="clearAll()">
@@ -311,7 +321,7 @@
     </div>
 
     <script src="script.js"></script>
-
+    <input type="file" id="importFile" accept=".json" style="display: none;" />
 </body>
 
 </html>
